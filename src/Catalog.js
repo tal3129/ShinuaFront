@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Grid, TextField } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import ProductCard from "./ProductCard";
-import UploadButton from "./Upload";
+import UploadButton from "./AddProductButton";
+import SearchBar from "./SearchBar";
+import styled from "styled-components";
+import AddProductButton from "./AddProductButton";
 
 const Catalog = ({ products }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,21 +19,20 @@ const Catalog = ({ products }) => {
 
   return (
     <>
-      <TextField
-        label="Search Products"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        fullWidth
-        margin="normal"
-      />
-      <Grid dir="rtl" container spacing={2}>
-        {filteredProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <ProductCard product={product} />
-          </Grid>
-        ))}
-      </Grid>
-      <UploadButton />
+      <Box sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
+        <SearchBar
+          searchTerm={searchTerm}
+          handleSearchChange={handleSearchChange}
+        />
+        <Grid container spacing={2}>
+          {filteredProducts.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
+              <ProductCard product={product} />
+            </Grid>
+          ))}
+        </Grid>
+        <AddProductButton />
+      </Box>
     </>
   );
 };
