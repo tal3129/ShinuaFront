@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MoreVert, Favorite, Edit } from "@mui/icons-material";
+import { MoreVert, Edit, Add } from "@mui/icons-material";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -66,7 +66,7 @@ const ProductCard = ({ product }) => {
       </StyledCardContent>
       <div>
         <IconButton aria-label="add to favorites">
-          <Favorite />
+          <Add />
         </IconButton>
         <IconButton aria-label="edit product">
           <Edit />

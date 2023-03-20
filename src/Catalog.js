@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Box, Grid } from "@mui/material";
 import ProductCard from "./ProductCard";
-import UploadButton from "./AddProductButton";
 import SearchBar from "./SearchBar";
-import styled from "styled-components";
 import AddProductButton from "./AddProductButton";
 
 const Catalog = ({ products }) => {
