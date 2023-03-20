@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText } from "@mui/material";
+import MultipleImagesUpload from "./MultipleImagesUpload";
 
 const AddProductDialog = ({ open, onClose }) => {
     const [name, setName] = useState("");
@@ -83,16 +84,7 @@ const AddProductDialog = ({ open, onClose }) => {
                     value={quantity}
                     onChange={handleQuantityChange}
                 />
-                <TextField
-                    margin="dense"
-                    id="image"
-                    label="כתובת תמונה"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={image}
-                    onChange={handleImageChange}
-                />
+                <MultipleImagesUpload />
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>ביטול</Button>

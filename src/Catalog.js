@@ -16,7 +16,7 @@ const Catalog = ({ products }) => {
     setSearchTerm(event.target.value);
   };
 
-  const [openAddProductDialog, setOpenAddProductDialog] = useState(true);
+  const [openAddProductDialog, setOpenAddProductDialog] = useState(false);
 
   const handleOpenAddProductDialog = () => {
     setOpenAddProductDialog(true);
