@@ -3,6 +3,7 @@ import { Box, Grid } from "@mui/material";
 import ProductCard from "./ProductCard";
 import SearchBar from "./SearchBar";
 import AddProductButton from "./AddProductButton";
+import AddProductDialog from "./AddProductDialog";
 
 const Catalog = ({ products }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,9 +16,21 @@ const Catalog = ({ products }) => {
     setSearchTerm(event.target.value);
   };
 
+  const [openAddProductDialog, setOpenAddProductDialog] = useState(true);
+
+  const handleOpenAddProductDialog = () => {
+    setOpenAddProductDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddProductDialog(false);
+  };
+
+
   return (
     <>
       <Box sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
+        <AddProductDialog open={openAddProductDialog} onClose={handleClose} dir="rtl" />
         <SearchBar
           searchTerm={searchTerm}
           handleSearchChange={handleSearchChange}
@@ -29,7 +42,7 @@ const Catalog = ({ products }) => {
             </Grid>
           ))}
         </Grid>
-        <AddProductButton />
+        <AddProductButton onClick={handleOpenAddProductDialog} />
       </Box>
     </>
   );
