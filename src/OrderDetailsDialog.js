@@ -28,8 +28,10 @@ const OrderDetailsDialog = ({
     // Save changes to the `orderData` passed to this component
     setOrderData(newOrderData);
 
+    console.log(newOrderData);
+
     if (onSubmit) {
-      onSubmit(orderData);
+      onSubmit(newOrderData);
     }
 
     onClose();

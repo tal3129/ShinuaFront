@@ -8,19 +8,19 @@ export function useCatalog() {
   const [products, setProducts] = useState([]);
 
   function fetchCatalog() {
-      axios
-        .get(`http://${API_HOST}:${API_PORT}/get_catalog`)
-        .then((response) => {
-          setProducts(response.data.Products);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    axios
+      .get(`http://${API_HOST}:${API_PORT}/get_catalog`)
+      .then((response) => {
+        setProducts(response.data.Products);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   // Fetch once when the page loads
   useEffect(() => {
-    fetchCatalog()
+    fetchCatalog();
   }, []);
 
   return {
@@ -33,23 +33,58 @@ export function useOrders() {
   const [orders, setOrders] = useState([]);
 
   function fetchOrders() {
-      axios
-        .get(`http://${API_HOST}:${API_PORT}/get_orders`)
-        .then((response) => {
-          setOrders(response.data.Orders);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    axios
+      .get(`http://${API_HOST}:${API_PORT}/get_orders`)
+      .then((response) => {
+        setOrders(response.data.Orders);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   // Fetch once when the page loads
   useEffect(() => {
-    fetchOrders()
+    fetchOrders();
   }, []);
 
   return {
     orders,
     fetchOrders,
   };
+}
+
+export function addOrder(order) {
+  const { data } = axios
+    .post(`http://${API_HOST}:${API_PORT}/add_order`, {
+      did: "", // We don't know the id yet
+      name: order.name,
+      address: order.address,
+      description: order.description,
+      date: new Date().toISOString(),
+      ordered_products: {
+        // No products yet :(
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+export function addProductToOrder(oid, pid, amount) {
+  const { data } = axios
+    .post(`http://${API_HOST}:${API_PORT}/add_product_to_order`, {
+      pid: pid,
+      oid: oid,
+      amount: amount,
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
