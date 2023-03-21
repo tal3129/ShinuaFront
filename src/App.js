@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
 import { useCatalog } from "./api_hooks";
 
 function App() {
-  const products = useCatalog();
+  const {products} = useCatalog();
 
   return (
     <BrowserRouter>
