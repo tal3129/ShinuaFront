@@ -26,11 +26,14 @@ const Catalog = ({ products }) => {
     setOpenAddProductDialog(false);
   };
 
-
   return (
     <>
       <Box sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
-        <AddProductDialog open={openAddProductDialog} onClose={handleClose} dir="rtl" />
+        <AddProductDialog
+          open={openAddProductDialog}
+          onClose={handleClose}
+          dir="rtl"
+        />
         <SearchBar
           searchTerm={searchTerm}
           handleSearchChange={handleSearchChange}

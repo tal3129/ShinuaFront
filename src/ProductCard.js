@@ -66,8 +66,13 @@ const ProductCard = ({ product }) => {
 
   return (
     <StyledCard>
-      <AddToOrderDialog open={openAddToOrder} onClose={handleClose} product={product} dir="rtl" />
-      <EditProductDialog 
+      <AddToOrderDialog
+        open={openAddToOrder}
+        onClose={handleClose}
+        product={product}
+        dir="rtl"
+      />
+      <EditProductDialog
         open={editDialogOpen}
         onClose={handleEditDialogClose}
         initialProduct={product}
