@@ -5,6 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
 
 const OrderDetailsDialog = ({
   open,
@@ -28,8 +31,10 @@ const OrderDetailsDialog = ({
     // Save changes to the `orderData` passed to this component
     setOrderData(newOrderData);
 
+    console.log(newOrderData);
+
     if (onSubmit) {
-      onSubmit(orderData);
+      onSubmit(newOrderData);
     }
 
     onClose();
@@ -103,6 +108,20 @@ const OrderDetailsDialog = ({
             fullWidth
             variant="standard"
           />
+          <InputLabel id="status-label">סטטוס</InputLabel>
+          <Select
+            margin="dense"
+            id="status"
+            name="status"
+            label="סטטוס"
+            fullWidth
+            variant="standard"
+            value={newOrderData.status}
+            onChange={handleNewOrderFieldChange}
+          >
+            <MenuItem value={0}>בתהליך</MenuItem>
+            <MenuItem value={1}>הסתיימה</MenuItem>
+          </Select>
           <TextField
             label="פרטים נוספים"
             value={newOrderData.description}
