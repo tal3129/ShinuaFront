@@ -45,6 +45,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     if (productAmount > 0) {
       addProductToOrder(currentOrder.did, product.did, productAmount);
     }
+    handleAddProductClose();
   };
 
   const handleSelectOrder = (order) => {
