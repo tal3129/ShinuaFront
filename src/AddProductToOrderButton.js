@@ -11,7 +11,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import OrderDetailsDialog from "./OrderDetailsDialog";
 import { Divider } from "@mui/material";
-import { useOrders } from "./api_hooks";
+import { useOrders, addOrder, addProductToOrder } from "./api_hooks";
 
 const AddToOrderDialog = ({ open, onClose, product }) => {
   const [addProductOpen, setAddProductOpen] = useState(false);
@@ -24,24 +24,11 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     address: "",
     contactName: "",
     contactNumber: "",
+    status: 0
   });
   const { orders, fetchOrders } = useOrders();
 
-  useEffect(() => {
-    // Fetch the orders when the "add to order" dialog is opened
-    if (open) {
-      fetchOrders();
-    }
-  }, [open]);
-
   const [currentOrder, setCurrentOrder] = useState({});
-
-  //   const orders = useOrders();
-  //   setOrders(useOrders())
-  //   useEffect(() => {
-  //     // Fetch orders data from API
-  //     setOrders(ordersData);
-  //   }, []);
 
   const handleCreateOrderOpen = () => {
     setCreateOrderOpen(true);
@@ -55,10 +42,15 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     // TODO ACTUALLY ADD PRODUCT TO ORDER
     console.log(product);
     console.log(productAmount);
-    console.log(orders);
+    console.log(currentOrder);
+    if (productAmount > 0) {
+      addProductToOrder(currentOrder.did, product.did, productAmount);
+    }
+    handleAddProductClose();
   };
 
   const handleSelectOrder = (order) => {
+    onClose()
     setCurrentOrder(order);
     setAddProductOpen(true);
   };
@@ -66,6 +58,16 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   const handleProductAmountChange = (event) => {
     setProductAmount(event.target.value);
   };
+
+  const handleAddOrder = (order) => {
+    addOrder(order);
+  };
+  useEffect(() => {
+    // Fetch the orders when the "add to order" dialog is opened
+    if (open) {
+      fetchOrders();
+    }
+  }, [open, orderData]);
 
   return (
     <>
@@ -83,6 +85,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
             onClose={() => {
               setCreateOrderOpen(false);
             }}
+            onSubmit={handleAddOrder}
             product={product}
             orderData={orderData}
             setOrderData={setOrderData}
