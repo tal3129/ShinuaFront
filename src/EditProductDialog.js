@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, Select, MenuItem, InputLabel } from "@mui/material";
 import MultipleImagesUpload from "./MultipleImagesUpload";
+import { editProduct } from "./api_hooks";
 
 const EditProductDialog = ({ open, onClose, initialProduct }) => {
     const [values, setValues] = useState(initialProduct);
@@ -18,6 +19,7 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
 
     const handleEditClick = () => {
         console.log("Editing product", values);
+        editProduct(values);
         onCloseWrapper();
     };
 
@@ -88,8 +90,8 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
                     value={values.status}
                     onChange={handleChange}
                 >
-                    <MenuItem value={"במחסן"}>במחסן</MenuItem>
-                    <MenuItem value={"בשטח"}>בשטח</MenuItem>
+                    <MenuItem value={1}>במחסן</MenuItem>
+                    <MenuItem value={0}>בשטח</MenuItem>
                 </Select>
                 <MultipleImagesUpload onImageChange={handleImageChange} />
             </DialogContent>

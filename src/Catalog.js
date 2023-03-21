@@ -7,7 +7,6 @@ import AddProductDialog from "./AddProductDialog";
 
 const Catalog = ({ products }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  console.log("products", products);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
