@@ -49,6 +49,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   };
 
   const handleSelectOrder = (order) => {
+    onClose()
     setCurrentOrder(order);
     setAddProductOpen(true);
   };
