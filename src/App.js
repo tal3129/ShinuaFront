@@ -1,5 +1,6 @@
 import React from "react";
 import Catalog from "./Catalog";
+import Orders from "./Orders";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import { Box } from "@mui/material";
@@ -17,7 +18,7 @@ function App() {
           <Route path="/" element={<Catalog products={products}/>} />
           <Route path="/catalog" element={<Catalog products={products}/>} />
           {/* <Route path="/collections" element={<Collections />} /> */}
-          {/* <Route path="/orders" element={<Orders />} /> */}
+          <Route path="/orders" element={<Orders />} />
         </Routes>
       </Box>
     </Box>
