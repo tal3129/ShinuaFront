@@ -1,39 +1,40 @@
 // Component that adds product to the catalog with the fields: name, sender, description, quantity, image
 
 import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, Select, MenuItem, InputLabel } from "@mui/material";
 import MultipleImagesUpload from "./MultipleImagesUpload";
 
+const createEmptyProduct = () => {
+    return {
+        name: "",
+        sender: "",
+        description: "",
+        quantity: "",
+        status: "במחסן",
+        image: ""
+    }
+};
+
 const AddProductDialog = ({ open, onClose }) => {
-    const [name, setName] = useState("");
-    const [sender, setSender] = useState("");
-    const [description, setDescription] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [image, setImage] = useState("");
+    const [values, setValues] = useState(createEmptyProduct());
 
-    const handleNameChange = (event) => {
-        setName(event.target.value);
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setValues((prevValues) => ({ ...prevValues, [name]: value }));
     };
 
-    const handleSenderChange = (event) => {
-        setSender(event.target.value);
-    };
-
-    const handleDescriptionChange = (event) => {
-        setDescription(event.target.value);
-    };
-
-    const handleQuantityChange = (event) => {
-        setQuantity(event.target.value);
-    };
-
-    const handleImageChange = (event) => {
-        setImage(event.target.value);
+    const handleImageChange = (value) => {
+        setValues((prevValues) => ({ ...prevValues, image: value }));
     };
 
     const handleAddClick = () => {
-        console.log("Adding product", { name, sender, description, quantity, image });
+        console.log("Adding product", values);
+        onCloseWrapper();
+    };
+
+    const onCloseWrapper = () => {
         onClose();
+        setValues(createEmptyProduct());
     };
 
     return (
@@ -47,47 +48,65 @@ const AddProductDialog = ({ open, onClose }) => {
                     autoFocus
                     margin="dense"
                     id="name"
+                    name="name"
                     label="שם המוצר"
                     type="text"
                     fullWidth
                     variant="standard"
-                    value={name}
-                    onChange={handleNameChange}
+                    value={values.name}
+                    onChange={handleChange}
                 />
                 <TextField
                     margin="dense"
                     id="sender"
+                    name="sender"
                     label="תורם"
                     type="text"
                     fullWidth
                     variant="standard"
-                    value={sender}
-                    onChange={handleSenderChange}
+                    value={values.sender}
+                    onChange={handleChange}
                 />
                 <TextField
                     margin="dense"
                     id="description"
+                    name="description"
                     label="תיאור"
                     type="text"
                     fullWidth
                     variant="standard"
-                    value={description}
-                    onChange={handleDescriptionChange}
+                    value={values.description}
+                    onChange={handleChange}
                 />
                 <TextField
                     margin="dense"
                     id="quantity"
+                    name="quantity"
                     label="כמות במלאי"
                     type="number"
                     fullWidth
                     variant="standard"
-                    value={quantity}
-                    onChange={handleQuantityChange}
+                    value={values.quantity}
+                    onChange={handleChange}
                 />
-                <MultipleImagesUpload />
+                <InputLabel id="status-label">סטטוס</InputLabel>
+                <Select
+                    margin="dense"
+                    id="status"
+                    name="status"
+                    label="סטטוס"
+                    fullWidth
+                    variant="standard"
+                    value={values.status}
+                    onChange={handleChange}
+                >
+                    <MenuItem value={"במחסן"}>במחסן</MenuItem>
+                    <MenuItem value={"בשטח"}>בשטח</MenuItem>
+                </Select>
+                <MultipleImagesUpload onImageChange={handleImageChange} />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>ביטול</Button>
+                <Button onClick={onCloseWrapper}>ביטול</Button>
                 <Button onClick={handleAddClick}>הוספה</Button>
             </DialogActions>
         </Dialog>
