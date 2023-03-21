@@ -21,7 +21,7 @@ const createEmptyProduct = () => {
     origin: "",
     description: "",
     amount: "",
-    status: "במחסן",
+    status: 1,
     image: "",
   };
 };
@@ -111,8 +111,8 @@ const AddProductDialog = ({ open, onClose }) => {
           value={values.status}
           onChange={handleChange}
         >
-          <MenuItem value={"במחסן"}>במחסן</MenuItem>
-          <MenuItem value={"בשטח"}>בשטח</MenuItem>
+          <MenuItem value={1}>במחסן</MenuItem>
+          <MenuItem value={0}>בשטח</MenuItem>
         </Select>
         <MultipleImagesUpload onImageChange={handleImageChange} />
       </DialogContent>

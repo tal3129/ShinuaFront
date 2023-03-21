@@ -88,3 +88,14 @@ export function addProductToOrder(oid, pid, amount) {
       console.log(error);
     });
 }
+
+// Function to edit product using API
+export function editProduct(product) {
+  axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
