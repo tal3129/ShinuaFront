@@ -95,6 +95,15 @@ const OrderDetailsDialog = ({
             variant="standard"
           />
           <TextField
+            label="תאריך"
+            value={newOrderData.date}
+            id="date"
+            name="date"
+            onChange={handleNewOrderFieldChange}
+            fullWidth
+            variant="standard"
+          />
+          <TextField
             label="פרטים נוספים"
             value={newOrderData.description}
             id="description"
@@ -106,7 +115,7 @@ const OrderDetailsDialog = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelOrder}>ביטול</Button>
-          <Button onClick={handleCreateOrder}>צור הזמנה</Button>
+          <Button onClick={handleCreateOrder}>שמור</Button>
         </DialogActions>
       </Dialog>
     </>
