@@ -12,6 +12,7 @@ function App() {
       sender: "L'Oreal",
       description: "שמפו לאיתמר לצרכי השיער המיוחדים שלך",
       quantity: 10,
+      status: "במחסן",
       image: "https://via.placeholder.com/150",
     },
     {
@@ -20,6 +21,7 @@ function App() {
       sender: "קולגייט",
       description: "Fluoride toothpaste for cavity protection",
       quantity: 20,
+      status: "במחסן",
       image: "https://via.placeholder.com/150",
     },
     {
@@ -28,6 +30,7 @@ function App() {
       sender: "Dove",
       description: "Gentle cleansing bar for sensitive skin",
       quantity: 15,
+      status: "במחסן",
       image: "https://via.placeholder.com/150",
     },
     {
@@ -36,6 +39,7 @@ function App() {
       sender: "Dove",
       description: "skin",
       quantity: 15,
+      status: "במחסן",
       image: "https://via.placeholder.com/150",
     },
   ];

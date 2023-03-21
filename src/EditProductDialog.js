@@ -4,19 +4,8 @@ import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, Select, MenuItem, InputLabel } from "@mui/material";
 import MultipleImagesUpload from "./MultipleImagesUpload";
 
-const createEmptyProduct = () => {
-    return {
-        name: "",
-        sender: "",
-        description: "",
-        quantity: "",
-        status: "במחסן",
-        image: ""
-    }
-};
-
-const AddProductDialog = ({ open, onClose }) => {
-    const [values, setValues] = useState(createEmptyProduct());
+const EditProductDialog = ({ open, onClose, initialProduct }) => {
+    const [values, setValues] = useState(initialProduct);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -27,22 +16,21 @@ const AddProductDialog = ({ open, onClose }) => {
         setValues((prevValues) => ({ ...prevValues, image: value }));
     };
 
-    const handleAddClick = () => {
-        console.log("Adding product", values);
+    const handleEditClick = () => {
+        console.log("Editing product", values);
         onCloseWrapper();
     };
 
     const onCloseWrapper = () => {
         onClose();
-        setValues(createEmptyProduct());
     };
 
     return (
         <Dialog open={open} onClose={onClose} dir="rtl">
-            <DialogTitle>הוספת מוצר</DialogTitle>
+            <DialogTitle>עריכת מוצר</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    יש למלא את השדות הבאים כדי להוסיף מוצר חדש לקטלוג
+                    יש למלא את השדות הבאים כדי לערוך מוצר בקטלוג
                 </DialogContentText>
                 <TextField
                     autoFocus
@@ -107,10 +95,10 @@ const AddProductDialog = ({ open, onClose }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCloseWrapper}>ביטול</Button>
-                <Button onClick={handleAddClick}>הוספה</Button>
+                <Button onClick={handleEditClick}>הוספה</Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-export default AddProductDialog;
+export default EditProductDialog;
