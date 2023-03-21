@@ -97,7 +97,7 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCloseWrapper}>ביטול</Button>
-                <Button onClick={handleEditClick}>הוספה</Button>
+                <Button onClick={handleEditClick}>שמור</Button>
             </DialogActions>
         </Dialog>
     );
