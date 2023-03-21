@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   Card,
@@ -12,6 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { MoreVert, Edit, Add } from "@mui/icons-material";
+import AddToOrderDialog from "./AddProductToOrderButton";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -38,8 +39,23 @@ const ProductCard = ({ product }) => {
     console.log("Exporting product", product);
   };
 
+  const handleAddOrderClick = (event) => {
+    handleOpenAddToOrder();
+  };
+
+  const [openAddToOrder, setOpenAddToOrder] = useState(false);
+
+  const handleOpenAddToOrder = () => {
+    setOpenAddToOrder(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddToOrder(false);
+  };
+
   return (
     <StyledCard>
+      <AddToOrderDialog open={openAddToOrder} onClose={handleClose} product={product} dir="rtl" />
       <CardActionArea>
         <CardMedia
           component="img"
@@ -65,7 +81,7 @@ const ProductCard = ({ product }) => {
         </Typography>
       </StyledCardContent>
       <div>
-        <IconButton aria-label="add to favorites">
+        <IconButton aria-label="add to favorites" onClick={handleAddOrderClick}>
           <Add />
         </IconButton>
         <IconButton aria-label="edit product">
@@ -88,7 +104,6 @@ const ProductCard = ({ product }) => {
         >
           <MenuItem onClick={handleMenuExport}>Export</MenuItem>
           <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          
         </Menu>
       </div>
     </StyledCard>
