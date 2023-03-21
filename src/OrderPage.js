@@ -3,14 +3,22 @@ import { List, ListItemButton, ListItemText, Dialog, DialogTitle, DialogContent,
 import { useState } from 'react';
 import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
+import OrderDetailsDialog from './OrderDetailsDialog';
 import OrderListItem from './OrderListItem';
 
 function OrderPage({ order }) {
-  const [name, setName] = useState(order.name);
-  const [date, setDate] = useState(order.date);
-  const [address, setAddress] = useState(order.address);
+  const [orderDetails, setOrderDetails] = useState({
+    name: order.name,
+    date: order.date,
+    address: order.address
+  });
   const [newOrderedProducts, setNewOrderedProducts] = useState(order.ordered_products);
   const [orderChanged, setOrderChanged] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
 
   const handleAmountChange = (index) => (newAmount) => {
     const updatedOrderedProducts = [...newOrderedProducts];
@@ -21,7 +29,7 @@ function OrderPage({ order }) {
 
   const handleSave = () => {
     const updatedOrder = {
-      ...order,
+      ...orderDetails,
       ordered_products: newOrderedProducts.map(([product, amount]) => [product.pid, amount])
     };
     setOrderChanged(false);
@@ -31,19 +39,19 @@ function OrderPage({ order }) {
   };
 
   const handleEdit = () => {
-
+    setEditOpen(true);
   };
 
   return (
     <>
       <Box>
         <Typography dir="rtl" variant="h4">
-          {name}
+          {orderDetails.name}
         </Typography>
         <Button startIcon={<Save/>} onClick={handleSave} disabled={!orderChanged}>Save</Button>
         <Button startIcon={<Edit/>} onClick={handleEdit}>Edit</Button>
         <ExportToPDFButton order_id={order.oid}/>
-        <OrderDetails date={date} address={address} />
+        <OrderDetails order={orderDetails} />
         <Stack>
           <List>
             {order.ordered_products.map(([product, amount], index) => (
@@ -52,6 +60,13 @@ function OrderPage({ order }) {
           </List>
         </Stack>
       </Box>
+      <OrderDetailsDialog
+        open={editOpen}
+        onClose={handleEditClose}
+        orderData={orderDetails}
+        setOrderData={setOrderDetails}
+        onSubmit={() => setOrderChanged(true)}
+      />
     </>
   );
 }
