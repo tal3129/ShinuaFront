@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import { Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { usePickups } from "./api_hooks";
 
-const PickUps = ({ pickups }) => {
+const PickUps = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [expandedPickups, setExpandedPickups] = useState([]);
+
+  const { pickups } = usePickups();
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -17,6 +20,7 @@ const PickUps = ({ pickups }) => {
   };
 
   const handleExpandPickup = (pickup) => {
+    console.log(expandedPickups);
     if (expandedPickups.includes(pickup)) {
       setExpandedPickups((prevExpandedPickups) => prevExpandedPickups.filter((p) => p !== pickup));
     } else {
@@ -24,8 +28,7 @@ const PickUps = ({ pickups }) => {
     }
   };
 
-  const MAX_COLUMNS = 4;
-  const MAX_PRODUCTS = MAX_COLUMNS * 2;
+  const MAX_PRODUCTS = 8;
 
   const getProductsToShow = (products) => {
     if (products.length <= MAX_PRODUCTS) {
@@ -61,7 +64,7 @@ const PickUps = ({ pickups }) => {
             <Grid container spacing={2}>
               {(shouldShowAllImages(pickup) ? pickup.products : getProductsToShow(pickup.products)).map((product) => (
                 <Grid item key={product.id}>
-                  <ProductImage src={product.image} alt={product.name} onClick={() => handleProductClick(product)} />
+                  <ProductImage src={product.image_url_list ? product.image_url_list[0] : null} alt={product.name} onClick={() => handleProductClick(product)} />
                 </Grid>
               ))}
               {pickup.products.length > MAX_PRODUCTS && (
@@ -86,7 +89,7 @@ const PickUps = ({ pickups }) => {
               <Grid container spacing={2}>
                 {getMoreProducts(pickup.products).map((product) => (
                   <Grid item key={product.id}>
-                    <ProductImage src={product.image} alt={product.name} onClick={() => handleProductClick(product)} />
+                    <ProductImage src={product.image_url_list ? product.image_url_list[0] : null} alt={product.name} onClick={() => handleProductClick(product)} />
                   </Grid>
                 ))}
               </Grid>
@@ -116,7 +119,7 @@ const ProductDialog = ({ open, onClose, product }) => {
     <DialogContent>
     {product && (
       <React.Fragment>
-        <img src={product.image} alt={product.name} style={{ maxWidth: '100%' }} />
+        <img src={product.image_url_list ? product.image_url_list[0] : null} alt={product.name} style={{ maxWidth: '100%' }} />
         <Typography variant="subtitle1" gutterBottom>
           {product.description}
         </Typography>

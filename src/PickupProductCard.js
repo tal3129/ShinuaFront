@@ -44,7 +44,7 @@ const PickupProductCard = ({ product }) => {
         <CardMedia
           component="img"
           height="160"
-          image={product.image}
+          image={product.image_url_list ? product.image_url_list[0] : null}
           title={product.name}
         />
         <Chip
