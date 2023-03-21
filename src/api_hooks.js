@@ -36,7 +36,7 @@ export function useOrders() {
     axios
       .get(`http://${API_HOST}:${API_PORT}/get_orders`)
       .then((response) => {
-        setOrders(response.data.Orders);
+        setOrders(response.data);
       })
       .catch((error) => {
         console.error(error);
