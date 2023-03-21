@@ -1,11 +1,14 @@
 import { Edit, Save } from '@mui/icons-material';
 import { List, ListItemButton, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, ListItem, Typography, Stack } from '@mui/material';
 import { useState } from 'react';
+import OrderDetails from './OrderDetails';
 import OrderListItem from './OrderListItem';
 
 function OrderPage({ order }) {
-  const { ordered_products } = order;
-  const [newOrderedProducts, setNewOrderedProducts] = useState(ordered_products);
+  const [name, setName] = useState(order.name);
+  const [date, setDate] = useState(order.date);
+  const [address, setAddress] = useState(order.address);
+  const [newOrderedProducts, setNewOrderedProducts] = useState(order.ordered_products);
   const [orderChanged, setOrderChanged] = useState(false);
 
   const handleAmountChange = (index) => (newAmount) => {
@@ -26,13 +29,19 @@ function OrderPage({ order }) {
     // Save
   };
 
+  const handleEdit = () => {
+    
+  };
+
   return (
     <>
       <Box>
         <Typography dir="rtl" variant="h4">
-          {order.name}
+          {name}
         </Typography>
         <Button startIcon={<Save/>} onClick={handleSave} disabled={!orderChanged}>Save</Button>
+        <Button startIcon={<Edit/>} onClick={handleEdit}>Edit</Button>
+        <OrderDetails date={date} address={address} />
         <Stack>
           <List>
             {order.ordered_products.map(([product, amount], index) => (
