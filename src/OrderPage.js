@@ -1,6 +1,7 @@
 import { Edit, Save } from '@mui/icons-material';
 import { List, ListItemButton, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, ListItem, Typography, Stack } from '@mui/material';
 import { useState } from 'react';
+import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
 import OrderListItem from './OrderListItem';
 
@@ -30,7 +31,7 @@ function OrderPage({ order }) {
   };
 
   const handleEdit = () => {
-    
+
   };
 
   return (
@@ -41,6 +42,7 @@ function OrderPage({ order }) {
         </Typography>
         <Button startIcon={<Save/>} onClick={handleSave} disabled={!orderChanged}>Save</Button>
         <Button startIcon={<Edit/>} onClick={handleEdit}>Edit</Button>
+        <ExportToPDFButton order_id={order.oid}/>
         <OrderDetails date={date} address={address} />
         <Stack>
           <List>
