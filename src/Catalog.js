@@ -41,7 +41,7 @@ const Catalog = ({ products }) => {
         />
         <Grid container spacing={2}>
           {filteredProducts.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <Grid item xs={12} sm={6} md={4} key={product.did}>
               <ProductCard product={product} />
             </Grid>
           ))}
