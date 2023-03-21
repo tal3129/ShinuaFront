@@ -12,6 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { MoreVert, Edit, Add } from "@mui/icons-material";
+import EditProductDialog from "./EditProductDialog";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -24,6 +25,7 @@ const StyledCardContent = styled(CardContent)`
 
 const ProductCard = ({ product }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,8 +40,22 @@ const ProductCard = ({ product }) => {
     console.log("Exporting product", product);
   };
 
+  const handleEditClick = () => {
+    setAnchorEl(null);
+    setEditDialogOpen(true); // <-- Open the edit dialog
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false); // <-- Close the edit dialog
+  };
+
   return (
     <StyledCard>
+      <EditProductDialog 
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        initialProduct={product}
+      />
       <CardActionArea>
         <CardMedia
           component="img"
@@ -68,7 +84,7 @@ const ProductCard = ({ product }) => {
         <IconButton aria-label="add to favorites">
           <Add />
         </IconButton>
-        <IconButton aria-label="edit product">
+        <IconButton aria-label="edit product" onClick={handleEditClick}>
           <Edit />
         </IconButton>
         <IconButton
@@ -88,7 +104,6 @@ const ProductCard = ({ product }) => {
         >
           <MenuItem onClick={handleMenuExport}>Export</MenuItem>
           <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          
         </Menu>
       </div>
     </StyledCard>
