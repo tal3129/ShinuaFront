@@ -10,7 +10,7 @@ const Navbar = () => {
           <Button color="inherit" component={Link} to="/catalog">
             הקטלוג
           </Button>
-          <Button color="inherit" component={Link} to="/collections">
+          <Button color="inherit" component={Link} to="/pickups">
             איסופים
           </Button>
           <Button color="inherit" component={Link} to="/orders">

@@ -101,6 +101,30 @@ export function editProduct(product) {
     });
 }
 
+export function usePickups() {
+  const [pickups, setPickups] = useState([]);
+
+  function fetchPickups() {
+    axios
+      .get(`http://${API_HOST}:${API_PORT}/get_pickups`)
+      .then((response) => {
+        setPickups(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  // Fetch once when the page loads
+  useEffect(() => {
+    fetchPickups();
+  }, []);
+
+  return {
+    pickups,
+    fetchPickups,
+  };
+}
 export function deleteProduct(pid) {
   axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
     pid: pid,
