@@ -10,6 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import OrderDetailsDialog from "./OrderDetailsDialog";
+import { Divider } from "@mui/material";
 
 const orders = [
   {
@@ -35,6 +36,171 @@ const orders = [
     productCounts: [
       {
         pid: 2,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 3,
+    productCounts: [
+      {
+        pid: 3,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 4,
+    productCounts: [
+      {
+        pid: 4,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 5,
+    productCounts: [
+      {
+        pid: 5,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 6,
+    productCounts: [
+      {
+        pid: 6,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 7,
+    productCounts: [
+      {
+        pid: 7,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 8,
+    productCounts: [
+      {
+        pid: 8,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 9,
+    productCounts: [
+      {
+        pid: 9,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 10,
+    productCounts: [
+      {
+        pid: 10,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 11,
+    productCounts: [
+      {
+        pid: 11,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 12,
+    productCounts: [
+      {
+        pid: 12,
+        name: "wow",
+        description: "amazing",
+        imageUrlList: ["dacadebe.com"],
+        amount: 5,
+      },
+    ],
+  },
+  {
+    name: "חיילים שמחים",
+    description: "חיילים עצובים",
+    address: "צהל",
+    oid: 13,
+    productCounts: [
+      {
+        pid: 13,
         name: "wow",
         description: "amazing",
         imageUrlList: ["dacadebe.com"],
@@ -97,7 +263,12 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   return (
     <>
       {/* === choose order ===*/}
-      <Dialog open={open} onClose={onClose} dir="rtl">
+      <Dialog
+        open={open}
+        onClose={onClose}
+        dir="rtl"
+        PaperProps={{ sx: { height: "50%" } }}
+      >
         <DialogTitle>בחר הזמנה</DialogTitle>
         <DialogContent>
           <OrderDetailsDialog
@@ -111,19 +282,25 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
             dir="rtl"
           />
           <List>
-            {orders.map((order) => (
-              <ListItem key={order.oid}>
-                <ListItemButton onClick={() => handleSelectOrder(order)}>
-                  <ListItemText
-                    primary={order.name}
-                    secondary={order.description}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
             <ListItem>
-              <Button onClick={handleCreateOrderOpen}>+ יצירת הזמנה</Button>
+              <Button onClick={handleCreateOrderOpen} fullWidth>
+                + יצירת הזמנה
+              </Button>
             </ListItem>
+            <Divider light />
+            {orders.map((order) => (
+              <>
+                <ListItem key={order.oid}>
+                  <ListItemButton onClick={() => handleSelectOrder(order)}>
+                    <ListItemText
+                      primary={order.name}
+                      secondary={order.description}
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <Divider light />
+              </>
+            ))}
           </List>
         </DialogContent>
         <DialogActions>
