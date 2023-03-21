@@ -9,6 +9,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import OrderDetailsDialog from "./OrderDetailsDialog";
 
 const orders = [
   {
@@ -49,10 +50,11 @@ function getAllOrders() {
 }
 
 const AddToOrderDialog = ({ open, onClose, product }) => {
-  const [createOrderOpen, setCreateOrderOpen] = useState(false);
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [productAmount, setProductAmount] = useState("");
-  const [newOrderData, setNewOrderData] = useState({
+  const [orders, setOrders] = useState([]);
+  const [createOrderOpen, setCreateOrderOpen] = React.useState(false);
+  const [orderData, setOrderData] = useState({
     name: "",
     description: "",
     recipient: "",
@@ -60,7 +62,6 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     contactName: "",
     contactNumber: "",
   });
-  const [orders, setOrders] = useState([]);
 
   const [currentOrder, setCurrentOrder] = useState({});
 
@@ -70,26 +71,8 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     setOrders(ordersData);
   }, []);
 
-  const handleNewOrderFieldChange = (event) => {
-    const { name, value } = event.target;
-    setNewOrderData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   const handleCreateOrderOpen = () => {
     setCreateOrderOpen(true);
-  };
-
-  const handleCreateOrderClose = () => {
-    setCreateOrderOpen(false);
-  };
-
-  const handleCreateOrder = () => {
-    console.log(newOrderData);
-    // TODO ACTUALLY CREATE ORDER
-    setCreateOrderOpen(false);
   };
 
   const handleAddProductClose = () => {
@@ -117,6 +100,16 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
       <Dialog open={open} onClose={onClose} dir="rtl">
         <DialogTitle>בחר הזמנה</DialogTitle>
         <DialogContent>
+          <OrderDetailsDialog
+            open={createOrderOpen}
+            onClose={() => {
+              setCreateOrderOpen(false);
+            }}
+            product={product}
+            orderData={orderData}
+            setOrderData={setOrderData}
+            dir="rtl"
+          />
           <List>
             {orders.map((order) => (
               <ListItem key={order.oid}>
@@ -135,72 +128,6 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>ביטול</Button>
-        </DialogActions>
-      </Dialog>
-      {/* === create new order === */}
-      <Dialog open={createOrderOpen} onClose={handleCreateOrderClose} dir="rtl">
-        <DialogTitle>יצירת הזמנה</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            label="שם ההזמנה"
-            type="text"
-            id="name"
-            name="name"
-            value={newOrderData.name}
-            onChange={handleNewOrderFieldChange}
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            label="מקבל התרומה"
-            value={newOrderData.recipient}
-            id="recipient"
-            name="recipient"
-            onChange={handleNewOrderFieldChange}
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            label="כתובת למשלוח"
-            value={newOrderData.address}
-            id="address"
-            name="address"
-            onChange={handleNewOrderFieldChange}
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            label="איש קשר"
-            value={newOrderData.contactName}
-            id="contactName"
-            name="contactName"
-            onChange={handleNewOrderFieldChange}
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            label="מספר טלפון"
-            value={newOrderData.contactNumber}
-            id="contactNumber"
-            name="contactNumber"
-            onChange={handleNewOrderFieldChange}
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            label="פרטים נוספים"
-            value={newOrderData.description}
-            id="description"
-            name="description"
-            onChange={handleNewOrderFieldChange}
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCreateOrderClose}>ביטול</Button>
-          <Button onClick={handleCreateOrder}>צור הזמנה</Button>
         </DialogActions>
       </Dialog>
       {/* === add product to order === */}
