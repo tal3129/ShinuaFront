@@ -6,7 +6,7 @@ const example_product1 = {
   pid: 321,
 	name: "my_product_name", 
 	description: "hi its for free cuz you have no money",
-	image_url_list: ["link1", "link2"],
+	image_url_list: Array(2).fill("https://via.placeholder.com/200"),
 	status: 0,
 	amount: 5
 };
@@ -15,7 +15,7 @@ const example_product2 = {
   pid: 345,
 	name: "rgg", 
 	description: "hi its sdfg free cusdfgs",
-	image_url_list: ["link1", "link2"],
+	image_url_list: Array(5).fill("https://via.placeholder.com/200"),
 	status: 0,
 	amount: 5
 };
