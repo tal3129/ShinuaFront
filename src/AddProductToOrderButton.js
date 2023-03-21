@@ -11,214 +11,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import OrderDetailsDialog from "./OrderDetailsDialog";
 import { Divider } from "@mui/material";
-
-const orders = [
-  {
-    name: "חיילים רעבים",
-    description: "דכה דבה",
-    address: "מטורף",
-    oid: 1,
-    productCounts: [
-      {
-        pid: 1,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 2,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 2,
-    productCounts: [
-      {
-        pid: 2,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 3,
-    productCounts: [
-      {
-        pid: 3,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 4,
-    productCounts: [
-      {
-        pid: 4,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 5,
-    productCounts: [
-      {
-        pid: 5,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 6,
-    productCounts: [
-      {
-        pid: 6,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 7,
-    productCounts: [
-      {
-        pid: 7,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 8,
-    productCounts: [
-      {
-        pid: 8,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 9,
-    productCounts: [
-      {
-        pid: 9,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 10,
-    productCounts: [
-      {
-        pid: 10,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 11,
-    productCounts: [
-      {
-        pid: 11,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 12,
-    productCounts: [
-      {
-        pid: 12,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-  {
-    name: "חיילים שמחים",
-    description: "חיילים עצובים",
-    address: "צהל",
-    oid: 13,
-    productCounts: [
-      {
-        pid: 13,
-        name: "wow",
-        description: "amazing",
-        imageUrlList: ["dacadebe.com"],
-        amount: 5,
-      },
-    ],
-  },
-];
-
-// Mock functions for API endpoints
-function getAllOrders() {
-  return orders;
-}
+import { useOrders } from "./api_hooks";
 
 const AddToOrderDialog = ({ open, onClose, product }) => {
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [productAmount, setProductAmount] = useState("");
-  const [orders, setOrders] = useState([]);
   const [createOrderOpen, setCreateOrderOpen] = React.useState(false);
   const [orderData, setOrderData] = useState({
     name: "",
@@ -228,14 +25,23 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     contactName: "",
     contactNumber: "",
   });
+  const { orders, fetchOrders } = useOrders();
+
+  useEffect(() => {
+    // Fetch the orders when the "add to order" dialog is opened
+    if (open) {
+      fetchOrders();
+    }
+  }, [open]);
 
   const [currentOrder, setCurrentOrder] = useState({});
 
-  useEffect(() => {
-    // Fetch orders data from API
-    const ordersData = getAllOrders();
-    setOrders(ordersData);
-  }, []);
+  //   const orders = useOrders();
+  //   setOrders(useOrders())
+  //   useEffect(() => {
+  //     // Fetch orders data from API
+  //     setOrders(ordersData);
+  //   }, []);
 
   const handleCreateOrderOpen = () => {
     setCreateOrderOpen(true);
@@ -249,6 +55,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     // TODO ACTUALLY ADD PRODUCT TO ORDER
     console.log(product);
     console.log(productAmount);
+    console.log(orders);
   };
 
   const handleSelectOrder = (order) => {
@@ -282,7 +89,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
             dir="rtl"
           />
           <List>
-            <ListItem>
+            <ListItem key="CreateOrder">
               <Button onClick={handleCreateOrderOpen} fullWidth>
                 + יצירת הזמנה
               </Button>
@@ -290,7 +97,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
             <Divider light />
             {orders.map((order) => (
               <>
-                <ListItem key={order.oid}>
+                <ListItem key={order.did}>
                   <ListItemButton onClick={() => handleSelectOrder(order)}>
                     <ListItemText
                       primary={order.name}
