@@ -24,6 +24,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     address: "",
     contactName: "",
     contactNumber: "",
+    status: 0
   });
   const { orders, fetchOrders } = useOrders();
 
