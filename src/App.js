@@ -1,6 +1,7 @@
 import React from "react";
 import Catalog from "./Catalog";
 import PickUps from "./PickUps";
+import Pickup from "./Pickup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import { Box } from "@mui/material";
@@ -142,6 +143,7 @@ function App() {
           <Route path="/catalog" element={<Catalog products={products}/>} />
           { <Route path="/pickups" element={<PickUps pickups={pickups}/>} /> }
           {/* <Route path="/orders" element={<Orders />} /> */}
+          { <Route path="/pickups/:id" element={<Pickup/>} /> }
         </Routes>
       </Box>
     </Box>

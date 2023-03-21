@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const PickUps = ({ pickups }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -49,9 +50,11 @@ const PickUps = ({ pickups }) => {
       {pickups.map((pickup) => (
         <Card key={pickup.name}>
           <CardContent>
+            <Link key={pickup.id} to={{pathname: `/pickups/${pickup.id}`}} state={{pickup}}>
             <Typography variant="h5" gutterBottom>
               {pickup.name}
             </Typography>
+          </Link>
             <Typography variant="subtitle1" gutterBottom>
               {pickup.address}
             </Typography>
