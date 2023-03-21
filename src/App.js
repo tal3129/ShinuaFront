@@ -4,46 +4,10 @@ import Orders from "./Orders";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import { Box } from "@mui/material";
+import { useCatalog } from "./api_hooks";
 
 function App() {
-  const products = [
-    {
-      id: 1,
-      name: "שמפו",
-      sender: "L'Oreal",
-      description: "שמפו לאיתמר לצרכי השיער המיוחדים שלך",
-      quantity: 10,
-      status: "במחסן",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      name: "משחת שיניים",
-      sender: "קולגייט",
-      description: "Fluoride toothpaste for cavity protection",
-      quantity: 20,
-      status: "במחסן",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 3,
-      name: "Soap",
-      sender: "Dove",
-      description: "Gentle cleansing bar for sensitive skin",
-      quantity: 15,
-      status: "במחסן",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 4,
-      name: "Krupik",
-      sender: "Dove",
-      description: "skin",
-      quantity: 15,
-      status: "במחסן",
-      image: "https://via.placeholder.com/150",
-    },
-  ];
+  const products = useCatalog();
 
   return (
     <BrowserRouter>

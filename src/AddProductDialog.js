@@ -1,4 +1,4 @@
-// Component that adds product to the catalog with the fields: name, sender, description, quantity, image
+// Component that adds product to the catalog with the fields: name, origin, description, amount, image
 
 import React, { useState } from "react";
 import {
@@ -18,9 +18,9 @@ import MultipleImagesUpload from "./MultipleImagesUpload";
 const createEmptyProduct = () => {
   return {
     name: "",
-    sender: "",
+    origin: "",
     description: "",
-    quantity: "",
+    amount: "",
     status: "במחסן",
     image: "",
   };
@@ -69,13 +69,13 @@ const AddProductDialog = ({ open, onClose }) => {
         />
         <TextField
           margin="dense"
-          id="sender"
-          name="sender"
+          id="origin"
+          name="origin"
           label="תורם"
           type="text"
           fullWidth
           variant="standard"
-          value={values.sender}
+          value={values.origin}
           onChange={handleChange}
         />
         <TextField
@@ -91,13 +91,13 @@ const AddProductDialog = ({ open, onClose }) => {
         />
         <TextField
           margin="dense"
-          id="quantity"
-          name="quantity"
+          id="amount"
+          name="amount"
           label="כמות במלאי"
           type="number"
           fullWidth
           variant="standard"
-          value={values.quantity}
+          value={values.amount}
           onChange={handleChange}
         />
         <InputLabel id="status-label">סטטוס</InputLabel>

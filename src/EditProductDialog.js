@@ -1,4 +1,4 @@
-// Component that adds product to the catalog with the fields: name, sender, description, quantity, image
+// Component that adds product to the catalog with the fields: name, origin, description, amount, image
 
 import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, Select, MenuItem, InputLabel } from "@mui/material";
@@ -46,13 +46,13 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
                 />
                 <TextField
                     margin="dense"
-                    id="sender"
-                    name="sender"
+                    id="origin"
+                    name="origin"
                     label="תורם"
                     type="text"
                     fullWidth
                     variant="standard"
-                    value={values.sender}
+                    value={values.origin}
                     onChange={handleChange}
                 />
                 <TextField
@@ -68,13 +68,13 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
                 />
                 <TextField
                     margin="dense"
-                    id="quantity"
-                    name="quantity"
+                    id="amount"
+                    name="amount"
                     label="כמות במלאי"
                     type="number"
                     fullWidth
                     variant="standard"
-                    value={values.quantity}
+                    value={values.amount}
                     onChange={handleChange}
                 />
                 <InputLabel id="status-label">סטטוס</InputLabel>

@@ -81,11 +81,11 @@ const ProductCard = ({ product }) => {
         <CardMedia
           component="img"
           height="160"
-          image={product.image}
+          image={product.image_url_list ? product.image_url_list[0] : null}
           title={product.name}
         />
         <Chip
-          label={`${product.quantity} במלאי`}
+          label={`${product.amount} במלאי`}
           color="secondary"
           style={{ position: "absolute", top: "10px", left: "10px" }}
         />
@@ -95,7 +95,7 @@ const ProductCard = ({ product }) => {
           {product.name}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
-          {product.sender}
+          {product.origin}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
           {product.description}
