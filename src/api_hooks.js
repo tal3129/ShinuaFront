@@ -62,6 +62,7 @@ export function addOrder(order) {
       address: order.address,
       description: order.description,
       date: new Date().toISOString(),
+      status: order.status,
       ordered_products: {
         // No products yet :(
       },
@@ -92,6 +93,18 @@ export function addProductToOrder(oid, pid, amount) {
 // Function to edit product using API
 export function editProduct(product) {
   axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+export function deleteProduct(pid) {
+  axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
+    pid: pid,
+  })
     .then(response => {
       console.log(response);
     })
