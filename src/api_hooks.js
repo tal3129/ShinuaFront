@@ -36,7 +36,7 @@ export function useOrders() {
     axios
       .get(`http://${API_HOST}:${API_PORT}/get_orders`)
       .then((response) => {
-        setOrders(response.data.Orders);
+        setOrders(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -62,6 +62,7 @@ export function addOrder(order) {
       address: order.address,
       description: order.description,
       date: new Date().toISOString(),
+      status: order.status,
       ordered_products: {
         // No products yet :(
       },
@@ -101,7 +102,7 @@ export function editProduct(product) {
 }
 
 export function usePickups() {
-const [pickups, setPickups] = useState([]);
+  const [pickups, setPickups] = useState([]);
 
   function fetchPickups() {
     axios
@@ -123,4 +124,15 @@ const [pickups, setPickups] = useState([]);
     pickups,
     fetchPickups,
   };
+}
+export function deleteProduct(pid) {
+  axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
+    pid: pid,
+  })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }

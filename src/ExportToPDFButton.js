@@ -3,7 +3,7 @@ import { Alert, Backdrop, Button, CircularProgress, Snackbar } from "@mui/materi
 import { useState } from "react";
 
 const fetch_pdf = (order_id) => {
-  return fetch("/catalog"); // FIXME
+  return fetch("http://localhost:8000/orders/gQnhAxx0HTEowoaoeyg9/export_pdf"); // FIXME
 };
 
 const download_blob = (blob, filename) => {
