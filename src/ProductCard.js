@@ -16,6 +16,7 @@ import AddToOrderDialog from "./AddProductToOrderButton";
 import EditProductDialog from "./EditProductDialog";
 import { deleteProduct } from "./api_calls";
 import { useMutation, useQueryClient } from "react-query";
+import { Stack } from "@mui/system";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -99,11 +100,16 @@ const ProductCard = ({ product }) => {
           image={product.image_url_list ? product.image_url_list[0] : null}
           title={product.name}
         />
-        <Chip
-          label={`${product.amount} במלאי`}
-          color="secondary"
-          style={{ position: "absolute", top: "10px", left: "10px" }}
-        />
+        <Stack direction="column" spacing={1} sx={{ position: "absolute", top: "10px", right: "10px" }}>
+          <Chip
+            label={`${product.amount} במלאי`}
+            color="secondary"
+          />
+          {product.reserved != 0 && <Chip
+            label={`${product.reserved} שמורים`}
+            color="success"
+          />}
+        </Stack>
       </CardActionArea>
       <StyledCardContent>
         <Typography gutterBottom variant="h5" component="h2">
