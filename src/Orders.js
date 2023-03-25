@@ -25,7 +25,7 @@ const example_order = {
   name: "Order 123",
   address: "Example St",
   date: "Today",
-  ordered_products: [[example_product1, 20], [example_product2, 30]]
+  ordered_products: [[example_product1, 20], [example_product2, 30], [example_product1, 20], [example_product2, 30], [example_product1, 20], [example_product2, 30]]
 };
 
 const Orders = () => {

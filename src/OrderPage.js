@@ -1,5 +1,5 @@
-import { Edit, Save } from '@mui/icons-material';
-import { List, ListItemButton, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, ListItem, Typography, Stack } from '@mui/material';
+import { Edit, Save, ArrowBack } from '@mui/icons-material';
+import { Box, Button, Card, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
@@ -43,32 +43,43 @@ function OrderPage({ order }) {
   };
 
   return (
-    <>
-      <Box>
-        <Typography dir="rtl" variant="h4">
-          {orderDetails.name}
-        </Typography>
-        <Button startIcon={<Save/>} onClick={handleSave} disabled={!orderChanged}>Save</Button>
-        <Button startIcon={<Edit/>} onClick={handleEdit}>Edit</Button>
-        <ExportToPDFButton order_id={order.oid}/>
-        <OrderDetails order={orderDetails} />
-        <Stack>
-          <List>
-            {order.ordered_products.map(([product, amount], index) => (
-              <OrderListItem key={index} product={product} amount={amount} onAmountChange={handleAmountChange(index)} />
-            ))}
-          </List>
-        </Stack>
-      </Box>
-      <OrderDetailsDialog
-        open={editOpen}
-        onClose={handleEditClose}
-        orderData={orderDetails}
-        setOrderData={setOrderDetails}
-        onSubmit={() => setOrderChanged(true)}
-      />
-    </>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)'}}>
+      <Card sx={{ minWidth: '400px', width: '50%'}}>
+        <CardHeader
+          title={<Typography variant="h4" sx={{ fontWeight: 'bold' }}>{orderDetails.name}</Typography>}
+          action={
+            <Box sx={{ display: 'flex', gap: '16px' }}>
+              <Button variant="outlined" startIcon={<Save sx={{ ml: 1 }} />} onClick={handleSave} disabled={!orderChanged}>שמור</Button>
+              <Button variant="outlined" startIcon={<Edit sx={{ ml: 1 }} />} onClick={handleEdit}>ערוך</Button>
+              <ExportToPDFButton order_id={order.oid} />
+              <IconButton onClick={() => { }}>
+                <ArrowBack />
+              </IconButton>
+            </Box>
+          }
+          sx={{ padding: '16px' }}
+        />
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px'}}>
+          <OrderDetails order={orderDetails} />
+          <Stack sx={{ width: '100%' }}>
+            <List sx={{ backgroundColor: 'background.paper', overflow: 'auto', maxHeight: '350px' }}>
+              {order.ordered_products.map(([product, amount], index) => (
+                <OrderListItem key={index} product={product} amount={amount} onAmountChange={handleAmountChange(index)} />
+              ))}
+            </List>
+          </Stack>
+        </Box>
+        <OrderDetailsDialog
+          open={editOpen}
+          onClose={handleEditClose}
+          orderData={orderDetails}
+          setOrderData={setOrderDetails}
+          onSubmit={() => setOrderChanged(true)}
+        />
+      </Card>
+    </Box>
   );
 }
+
 
 export default OrderPage;

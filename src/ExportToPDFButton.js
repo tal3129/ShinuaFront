@@ -38,7 +38,7 @@ const ExportToPDFButton = ({ order_id }) => {
   };
 
   return (<>
-    <Button startIcon={<Share/>} onClick={handleExport}>Export to PDF</Button>
+    <Button startIcon={<Share sx={{ml: 1}} />} onClick={handleExport}>ייצא ל-PDF</Button>
     <Snackbar open={exportingErrorOpen} onClose={handleClose}>
       <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
         Error while exporting
