@@ -7,19 +7,13 @@ const API_PORT = "8000";
 export function getCatalog() {
   return axios
     .get(`http://${API_HOST}:${API_PORT}/get_catalog`)
-    .then((response) => (response.data.Products))
-    .catch((error) => {
-      console.error(error);
-    });
+    .then((response) => (response.data.Products));
 }
 
 export function getOrders() {
   return axios
     .get(`http://${API_HOST}:${API_PORT}/get_orders`)
-    .then((response) => (response.data))
-    .catch((error) => {
-      console.error(error);
-    });
+    .then((response) => (response.data));
 }
 
 export function getPickups() {
@@ -43,13 +37,6 @@ export function createOrder(order) {
       ordered_products: {
         // No products yet :(
       },
-    })
-    .then(function (response) {
-      console.log(response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
     });
 }
 
@@ -59,35 +46,16 @@ export function addProductToOrder({oid, pid, amount}) {
       pid: pid,
       oid: oid,
       amount: amount,
-    })
-    .then(function (response) {
-      console.log(response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
     });
 }
 
 // Function to edit product using API
 export function editProduct(product) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product)
-    .then(response => {
-      return response;
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product);
 }
 
 export function deleteProduct(pid) {
   return axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
     pid: pid,
-  })
-    .then(response => {
-      console.log(response);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  });
 }

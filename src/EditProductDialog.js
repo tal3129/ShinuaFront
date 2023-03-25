@@ -5,13 +5,19 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, D
 import MultipleImagesUpload from "./MultipleImagesUpload";
 import { editProduct } from "./api_calls";
 import { useMutation, useQueryClient } from "react-query";
+import { useCustomSnackbar } from "./snackbar_utils";
 
 const EditProductDialog = ({ open, onClose, initialProduct }) => {
     const queryClient = useQueryClient();
     const editProductMutation = useMutation(editProduct, {
         onSuccess: () => {
+            showSuccessSnackbar("edit-product-success", "המוצר עודכן בהצלחה");
             queryClient.invalidateQueries('catalog');
         },
+        onError: () => {
+            console.log('error');
+            showErrorSnackbar("edit-product-error", "אירעה שגיאה בעת עדכון המוצר");
+        }
     });
 
     const [values, setValues] = useState(initialProduct);
@@ -34,6 +40,8 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
     const onCloseWrapper = () => {
         onClose();
     };
+
+    const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
 
     return (
         <Dialog open={open} onClose={onClose} dir="rtl">

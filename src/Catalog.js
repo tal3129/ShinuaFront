@@ -6,13 +6,19 @@ import AddProductButton from "./AddProductButton";
 import AddProductDialog from "./AddProductDialog";
 import { useQuery } from "react-query";
 import { getCatalog } from "./api_calls";
+import { useCustomSnackbar } from "./snackbar_utils";
 
 const Catalog = () => {
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { showErrorSnackbar } = useCustomSnackbar();
   const { data: products, isFetching } = useQuery({
     queryKey: 'catalog',
     queryFn: getCatalog,
-    placeholderData: []
+    placeholderData: [],
+    onError: (error) => {
+      showErrorSnackbar("catalog-error", "אירעה שגיאה בעת טעינת הקטלוג");
+    }
   });
 
   const filteredProducts = products.filter((product) =>
