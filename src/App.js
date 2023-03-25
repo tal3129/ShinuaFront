@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import { Box } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "react-query";
+import OrderPage from "./OrderPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ function App() {
               {<Route path="/pickups" element={<PickUps />} />}
               {<Route path="/pickups/:id" element={<Pickup />} />}
               <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:id" element={<OrderPage />} />
             </Routes>
           </Box>
         </Box>
