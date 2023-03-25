@@ -22,6 +22,15 @@ export function getOrders() {
     });
 }
 
+export function getPickups() {
+  return axios
+    .get(`http://${API_HOST}:${API_PORT}/get_pickups`)
+    .then((response) => (response.data))
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 export function createOrder(order) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/add_order`, {
@@ -81,29 +90,4 @@ export function deleteProduct(pid) {
     .catch(error => {
       console.error(error);
     });
-}
-
-export function usePickups() {
-  const [pickups, setPickups] = useState([]);
-
-  function fetchPickups() {
-    axios
-      .get(`http://${API_HOST}:${API_PORT}/get_pickups`)
-      .then((response) => {
-        setPickups(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  // Fetch once when the page loads
-  useEffect(() => {
-    fetchPickups();
-  }, []);
-
-  return {
-    pickups,
-    fetchPickups,
-  };
 }
