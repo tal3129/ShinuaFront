@@ -13,6 +13,7 @@ import OrderDetailsDialog from "./OrderDetailsDialog";
 import { CircularProgress, Divider, Stack } from "@mui/material";
 import { addProductToOrder, createOrder, getOrders } from "./api_calls";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useCustomSnackbar } from "./snackbar_utils";
 
 const AddToOrderDialog = ({ open, onClose, product }) => {
   const queryClient = useQueryClient();
@@ -29,6 +30,8 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     contactNumber: "",
     status: 0
   });
+
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
   const { data: orders, isFetching: isLoadingOrders } = useQuery({
     queryKey: 'orders',
     queryFn: getOrders,
@@ -37,15 +40,23 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
 
   const addProductToOrderMutation = useMutation(addProductToOrder, {
     onSuccess: () => {
+      showSuccessSnackbar("add-product-success", "המוצר נוסף להזמנה בהצלחה");
       queryClient.invalidateQueries('orders');
       queryClient.invalidateQueries('catalog');
     },
+    onError: () => {
+      showErrorSnackbar("add-product-error", "אירעה שגיאה בעת הוספת המוצר להזמנה");
+    }
   });
 
   const createOrderMutation = useMutation(createOrder, {
     onSuccess: () => {
+      showSuccessSnackbar("create-order-success", "ההזמנה נוצרה בהצלחה");
       queryClient.invalidateQueries('orders');
     },
+    onError: () => {
+      showErrorSnackbar("create-order-error", "אירעה שגיאה בעת יצירת ההזמנה");
+    }
   });
 
   const [currentOrder, setCurrentOrder] = useState({});

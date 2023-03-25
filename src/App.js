@@ -8,6 +8,7 @@ import Navbar from "./Navbar";
 import { Box } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "react-query";
 import OrderPage from "./OrderPage";
+import { SnackbarProvider } from "notistack";
 
 const queryClient = new QueryClient();
 
@@ -15,21 +16,23 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Box sx={{ flexGrow: 1 }}>
-          <Navbar />
-          <Box sx={{ p: 2 }}>
-            <Routes>
-              <Route path="/" element={<Catalog />} />
-              <Route path="/catalog" element={<Catalog />} />
-              {<Route path="/pickups" element={<PickUps />} />}
-              {<Route path="/pickups/:id" element={<Pickup />} />}
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/orders/:id" element={<OrderPage />} />
-            </Routes>
+      <SnackbarProvider>
+        <BrowserRouter>
+          <Box sx={{ flexGrow: 1 }}>
+            <Navbar />
+            <Box sx={{ p: 2 }}>
+              <Routes>
+                <Route path="/" element={<Catalog />} />
+                <Route path="/catalog" element={<Catalog />} />
+                {<Route path="/pickups" element={<PickUps />} />}
+                {<Route path="/pickups/:id" element={<Pickup />} />}
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/orders/:id" element={<OrderPage />} />
+              </Routes>
+            </Box>
           </Box>
-        </Box>
-      </BrowserRouter>
+        </BrowserRouter>
+      </SnackbarProvider>
     </QueryClientProvider>
   );
 }
