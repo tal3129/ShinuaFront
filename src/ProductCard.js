@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MoreVert, Edit, Add } from "@mui/icons-material";
+import { MoreVert, Edit, Add, Delete } from "@mui/icons-material";
 import AddToOrderDialog from "./AddProductToOrderButton";
 import EditProductDialog from "./EditProductDialog";
 import { deleteProduct } from "./api_calls";
@@ -44,11 +44,6 @@ const ProductCard = ({ product }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleMenuExport = () => {
-    setAnchorEl(null);
-    console.log("Exporting product", product);
   };
 
   const handleMenuDelete = () => {
@@ -144,8 +139,10 @@ const ProductCard = ({ product }) => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuExport}>Export</MenuItem>
-          <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
+          <MenuItem onClick={handleMenuDelete}>
+            <Delete sx={{ ml: 1 }} />
+            מחק מוצר
+          </MenuItem>
         </Menu>
       </div>
     </StyledCard>
