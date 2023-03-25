@@ -3,9 +3,17 @@
 import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, Select, MenuItem, InputLabel } from "@mui/material";
 import MultipleImagesUpload from "./MultipleImagesUpload";
-import { editProduct } from "./api_hooks";
+import { editProduct } from "./api_calls";
+import { useMutation, useQueryClient } from "react-query";
 
 const EditProductDialog = ({ open, onClose, initialProduct }) => {
+    const queryClient = useQueryClient();
+    const editProductMutation = useMutation(editProduct, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('catalog');
+        },
+    });
+
     const [values, setValues] = useState(initialProduct);
 
     const handleChange = (event) => {
@@ -19,7 +27,7 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
 
     const handleEditClick = () => {
         console.log("Editing product", values);
-        editProduct(values);
+        editProductMutation.mutate(values);
         onCloseWrapper();
     };
 

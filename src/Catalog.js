@@ -4,9 +4,16 @@ import ProductCard from "./ProductCard";
 import SearchBar from "./SearchBar";
 import AddProductButton from "./AddProductButton";
 import AddProductDialog from "./AddProductDialog";
+import { useQuery } from "react-query";
+import { getCatalog } from "./api_calls";
 
-const Catalog = ({ products }) => {
+const Catalog = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: products } = useQuery({
+    queryKey: 'catalog',
+    queryFn: getCatalog,
+    placeholderData: []
+  });
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())

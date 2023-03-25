@@ -11,7 +11,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import OrderDetailsDialog from "./OrderDetailsDialog";
 import { Divider } from "@mui/material";
-import { useOrders, addOrder, addProductToOrder } from "./api_hooks";
+import { addOrder, addProductToOrder, getOrders } from "./api_calls";
+import { useQuery } from "react-query";
 
 const AddToOrderDialog = ({ open, onClose, product }) => {
   const [addProductOpen, setAddProductOpen] = useState(false);
@@ -26,7 +27,11 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     contactNumber: "",
     status: 0
   });
-  const { orders, fetchOrders } = useOrders();
+  const { data: orders } = useQuery({
+    queryKey: 'orders',
+    queryFn: getOrders,
+    placeholderData: [],
+  });
 
   const [currentOrder, setCurrentOrder] = useState({});
 
@@ -62,12 +67,12 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   const handleAddOrder = (order) => {
     addOrder(order);
   };
-  useEffect(() => {
-    // Fetch the orders when the "add to order" dialog is opened
-    if (open) {
-      fetchOrders();
-    }
-  }, [open, orderData]);
+  // useEffect(() => {
+  //   // Fetch the orders when the "add to order" dialog is opened
+  //   if (open) {
+  //     fetchOrders();
+  //   }
+  // }, [open, orderData]);
 
   return (
     <>
@@ -98,7 +103,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
               </Button>
             </ListItem>
             <Divider light />
-            {orders.map((order) => (
+            {orders && orders.map((order) => (
               <>
                 <ListItem key={order.did}>
                   <ListItemButton onClick={() => handleSelectOrder(order)}>

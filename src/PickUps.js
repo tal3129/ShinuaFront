@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { usePickups } from "./api_hooks";
+import { usePickups } from "./api_calls";
 
 const PickUps = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
