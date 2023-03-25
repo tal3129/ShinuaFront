@@ -1,5 +1,5 @@
 import { ArrowBack, Edit, Save } from '@mui/icons-material';
-import { Box, Button, Card, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ExportToPDFButton from './ExportToPDFButton';
@@ -53,28 +53,36 @@ function OrderPage() {
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)' }}>
-      <Card sx={{ minWidth: '400px', width: '50%' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 196px)' }}>
+      <Card sx={{ minWidth: '400px', width: '60%' }}>
         <CardHeader
           title={<Typography variant="h4" sx={{ fontWeight: 'bold' }}>{orderDetails.name}</Typography>}
-          action={
-            <Box sx={{ display: 'flex', gap: '16px' }}>
-              <Button variant="outlined" startIcon={<Save sx={{ ml: 1 }} />} onClick={handleSave} disabled={!orderChanged}>שמור</Button>
-              <Button variant="outlined" startIcon={<Edit sx={{ ml: 1 }} />} onClick={handleEdit}>ערוך</Button>
-              <ExportToPDFButton order_id={order.did} />
-              <IconButton onClick={() => { navigate(-1) }}>
-                <ArrowBack />
-              </IconButton>
-            </Box>
-          }
           sx={{ padding: '16px' }}
+          action={
+            <IconButton onClick={() => { navigate(-1) }}>
+              <ArrowBack />
+            </IconButton>
+          }
         />
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '16px' }}>
+        <CardActions>
+          <Stack sx={{ flexGrow: 1 }} direction='row' spacing={2}>
+            <Button variant="outlined" startIcon={<Save sx={{ ml: 1 }} />} onClick={handleSave} disabled={!orderChanged}>שמור</Button>
+            <Button variant="outlined" startIcon={<Edit sx={{ ml: 1 }} />} onClick={handleEdit}>ערוך</Button>
+            <ExportToPDFButton order_id={order.did} />
+          </Stack>
+        </CardActions>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '24px' }}>
           <OrderDetails order={orderDetails} />
           <Stack sx={{ width: '100%' }}>
-            <List sx={{ backgroundColor: 'background.paper', overflow: 'auto', maxHeight: '350px' }}>
+            <List sx={{ backgroundColor: 'background.paper', overflow: 'auto', maxHeight: '360px' }}>
               {newOrderedProducts.map((product, index) => (
-                <OrderListItem key={index} product={product} amount={product.amount} onAmountChange={handleAmountChange(index)} />
+                <OrderListItem
+                  key={index}
+                  product={product}
+                  amount={product.amount}
+                  onAmountChange={handleAmountChange(index)}
+                  onDeleteProduct={() => { }}
+                />
               ))}
             </List>
           </Stack>
@@ -87,7 +95,7 @@ function OrderPage() {
           onSubmit={() => setOrderChanged(true)}
         />
       </Card>
-    </Box>
+    </Box >
   );
 }
 

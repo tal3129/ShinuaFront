@@ -20,7 +20,7 @@ const Orders = () => {
         <Tab label="הזמנות שהסתיימו"/>
       </Tabs>
       {orders.map((order) => (
-        <Card key={order.name}>
+        <Card key={order.name} variant='outlined'>
           <CardContent>
             <StyledLink key={order.did} to={{ pathname: `/orders/${order.did}` }} state={{ order }}>
               <Typography variant="h5" gutterBottom>
