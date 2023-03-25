@@ -10,11 +10,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import OrderDetailsDialog from "./OrderDetailsDialog";
-import { Divider } from "@mui/material";
-import { addOrder, addProductToOrder, getOrders } from "./api_calls";
-import { useQuery } from "react-query";
+import { CircularProgress, Divider, Stack } from "@mui/material";
+import { addProductToOrder, createOrder, getOrders } from "./api_calls";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const AddToOrderDialog = ({ open, onClose, product }) => {
+  const queryClient = useQueryClient();
+
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [productAmount, setProductAmount] = useState("");
   const [createOrderOpen, setCreateOrderOpen] = React.useState(false);
@@ -27,10 +29,22 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
     contactNumber: "",
     status: 0
   });
-  const { data: orders } = useQuery({
+  const { data: orders, isFetching: isLoadingOrders } = useQuery({
     queryKey: 'orders',
     queryFn: getOrders,
     placeholderData: [],
+  });
+
+  const addProductToOrderMutation = useMutation(addProductToOrder, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('orders');
+    },
+  });
+
+  const createOrderMutation = useMutation(createOrder, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('orders');
+    },
   });
 
   const [currentOrder, setCurrentOrder] = useState({});
@@ -44,12 +58,12 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   };
 
   const handleAddProductToOrder = () => {
-    // TODO ACTUALLY ADD PRODUCT TO ORDER
-    console.log(product);
-    console.log(productAmount);
-    console.log(currentOrder);
     if (productAmount > 0) {
-      addProductToOrder(currentOrder.did, product.did, productAmount);
+      addProductToOrderMutation.mutate({
+        oid: currentOrder.did,
+        pid: product.did,
+        amount: productAmount
+      });
     }
     handleAddProductClose();
   };
@@ -65,14 +79,9 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   };
 
   const handleAddOrder = (order) => {
-    addOrder(order);
+    createOrderMutation.mutate(order);
   };
-  // useEffect(() => {
-  //   // Fetch the orders when the "add to order" dialog is opened
-  //   if (open) {
-  //     fetchOrders();
-  //   }
-  // }, [open, orderData]);
+
 
   return (
     <>
@@ -103,6 +112,9 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
               </Button>
             </ListItem>
             <Divider light />
+            <Stack alignItems="center">
+              {isLoadingOrders && <CircularProgress />}
+            </Stack>
             {orders && orders.map((order) => (
               <>
                 <ListItem key={order.did}>

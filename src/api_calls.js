@@ -16,14 +16,14 @@ export function getCatalog() {
 export function getOrders() {
   return axios
     .get(`http://${API_HOST}:${API_PORT}/get_orders`)
-    .then((response) => (response.data.Products))
+    .then((response) => (response.data))
     .catch((error) => {
       console.error(error);
     });
 }
 
-export function addOrder(order) {
-  const { data } = axios
+export function createOrder(order) {
+  return axios
     .post(`http://${API_HOST}:${API_PORT}/add_order`, {
       did: "", // We don't know the id yet
       name: order.name,
@@ -37,14 +37,15 @@ export function addOrder(order) {
     })
     .then(function (response) {
       console.log(response);
+      return response;
     })
     .catch(function (error) {
       console.log(error);
     });
 }
 
-export function addProductToOrder(oid, pid, amount) {
-  const { data } = axios
+export function addProductToOrder({oid, pid, amount}) {
+  return axios
     .post(`http://${API_HOST}:${API_PORT}/add_product_to_order`, {
       pid: pid,
       oid: oid,
@@ -52,6 +53,7 @@ export function addProductToOrder(oid, pid, amount) {
     })
     .then(function (response) {
       console.log(response);
+      return response;
     })
     .catch(function (error) {
       console.log(error);
@@ -63,6 +65,18 @@ export function editProduct(product) {
   return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product)
     .then(response => {
       return response;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+export function deleteProduct(pid) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
+    pid: pid,
+  })
+    .then(response => {
+      console.log(response);
     })
     .catch(error => {
       console.error(error);
@@ -92,15 +106,4 @@ export function usePickups() {
     pickups,
     fetchPickups,
   };
-}
-export function deleteProduct(pid) {
-  axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
-    pid: pid,
-  })
-    .then(response => {
-      console.log(response);
-    })
-    .catch(error => {
-      console.error(error);
-    });
 }

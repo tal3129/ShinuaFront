@@ -14,6 +14,8 @@ import {
 import { MoreVert, Edit, Add } from "@mui/icons-material";
 import AddToOrderDialog from "./AddProductToOrderButton";
 import EditProductDialog from "./EditProductDialog";
+import { deleteProduct } from "./api_calls";
+import { useMutation, useQueryClient } from "react-query";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -28,6 +30,13 @@ const ProductCard = ({ product }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
 
+  const queryClient = useQueryClient();
+  const deleteProductMutation = useMutation(deleteProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('catalog');
+    },
+  });
+
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -40,6 +49,12 @@ const ProductCard = ({ product }) => {
     setAnchorEl(null);
     console.log("Exporting product", product);
   };
+
+  const handleMenuDelete = () => {
+    setAnchorEl(null);
+    console.log(product);
+    deleteProductMutation.mutate(product.did);
+  }
 
   const handleAddOrderClick = (event) => {
     handleOpenAddToOrder();
@@ -124,7 +139,7 @@ const ProductCard = ({ product }) => {
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleMenuExport}>Export</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
+          <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
         </Menu>
       </div>
     </StyledCard>
