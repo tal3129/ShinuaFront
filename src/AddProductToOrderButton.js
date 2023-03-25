@@ -38,6 +38,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   const addProductToOrderMutation = useMutation(addProductToOrder, {
     onSuccess: () => {
       queryClient.invalidateQueries('orders');
+      queryClient.invalidateQueries('catalog');
     },
   });
 

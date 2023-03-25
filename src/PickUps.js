@@ -4,6 +4,7 @@ import { Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { usePickups } from "./api_calls";
+import ProductDialog from './ProductDialog';
 
 const PickUps = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -53,11 +54,11 @@ const PickUps = () => {
       {pickups.map((pickup) => (
         <Card key={pickup.name}>
           <CardContent>
-            <Link key={pickup.id} to={{pathname: `/pickups/${pickup.id}`}} state={{pickup}}>
-            <Typography variant="h5" gutterBottom>
-              {pickup.name}
-            </Typography>
-          </Link>
+            <Link key={pickup.id} to={{ pathname: `/pickups/${pickup.id}` }} state={{ pickup }}>
+              <Typography variant="h5" gutterBottom>
+                {pickup.name}
+              </Typography>
+            </Link>
             <Typography variant="subtitle1" gutterBottom>
               {pickup.address}
             </Typography>
@@ -111,26 +112,5 @@ const ProductImage = styled.img`
   cursor: pointer;
   height: 100px;
 `;
-
-const ProductDialog = ({ open, onClose, product }) => {
-  return (
-    <Dialog open={open} onClose={onClose}>
-    <DialogTitle>{product?.name}</DialogTitle>
-    <DialogContent>
-    {product && (
-      <React.Fragment>
-        <img src={product.image_url_list ? product.image_url_list[0] : null} alt={product.name} style={{ maxWidth: '100%' }} />
-        <Typography variant="subtitle1" gutterBottom>
-          {product.description}
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          Amount: {product.amount}
-        </Typography>
-      </React.Fragment>
-    )}
-    </DialogContent>
-  </Dialog>
-  );
-};
 
 export default PickUps;

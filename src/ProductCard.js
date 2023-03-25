@@ -11,11 +11,12 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MoreVert, Edit, Add } from "@mui/icons-material";
+import { MoreVert, Edit, Add, Delete } from "@mui/icons-material";
 import AddToOrderDialog from "./AddProductToOrderButton";
 import EditProductDialog from "./EditProductDialog";
 import { deleteProduct } from "./api_calls";
 import { useMutation, useQueryClient } from "react-query";
+import { Stack } from "@mui/system";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -43,11 +44,6 @@ const ProductCard = ({ product }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleMenuExport = () => {
-    setAnchorEl(null);
-    console.log("Exporting product", product);
   };
 
   const handleMenuDelete = () => {
@@ -99,11 +95,16 @@ const ProductCard = ({ product }) => {
           image={product.image_url_list ? product.image_url_list[0] : null}
           title={product.name}
         />
-        <Chip
-          label={`${product.amount} במלאי`}
-          color="secondary"
-          style={{ position: "absolute", top: "10px", left: "10px" }}
-        />
+        <Stack direction="column" spacing={1} sx={{ position: "absolute", top: "10px", right: "10px" }}>
+          <Chip
+            label={`${product.amount} במלאי`}
+            color="secondary"
+          />
+          {product.reserved != 0 && <Chip
+            label={`${product.reserved} שמורים`}
+            color="success"
+          />}
+        </Stack>
       </CardActionArea>
       <StyledCardContent>
         <Typography gutterBottom variant="h5" component="h2">
@@ -138,8 +139,10 @@ const ProductCard = ({ product }) => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuExport}>Export</MenuItem>
-          <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
+          <MenuItem onClick={handleMenuDelete}>
+            <Delete sx={{ ml: 1 }} />
+            מחק מוצר
+          </MenuItem>
         </Menu>
       </div>
     </StyledCard>

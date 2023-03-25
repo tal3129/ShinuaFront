@@ -1,8 +1,9 @@
-import { ListItem, ListItemButton, ListItemText, TextField } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { IconButton, ListItem, ListItemButton, ListItemText, TextField } from "@mui/material";
 import { useState } from "react";
 import ProductImageDisplay from "./ProductImageDisplay";
 
-const OrderListItem = ({ product, amount, onAmountChange }) => {
+const OrderListItem = ({ product, amount, onAmountChange, onDeleteProduct }) => {
   const [productImageDisplayOpen, setProductImageDisplayOpen] = useState(false);
   const handleAmountChange = (event) => {
     const newAmount = event.target.value;
@@ -29,6 +30,9 @@ const OrderListItem = ({ product, amount, onAmountChange }) => {
               sx={{ textAlign: "right" }}
           />
       </ListItemButton>
+      <IconButton onClick={onDeleteProduct}>
+        <Delete />
+      </IconButton>
       </ListItem>
       <ProductImageDisplay
         open={productImageDisplayOpen}
