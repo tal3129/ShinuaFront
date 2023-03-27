@@ -56,6 +56,15 @@ export function moveProductToInventory({pid}) {
     });
 }
 
+// TODO: create this in backend
+export function movePickupToInventory({pickupId}) {
+  return axios
+    .post(`http://${API_HOST}:${API_PORT}/move_pickup_to_inventory`, {
+      pickup_id: pickupId,
+    });
+}
+
+
 // Function to edit product using API
 export function editProduct(product) {
   return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product);
