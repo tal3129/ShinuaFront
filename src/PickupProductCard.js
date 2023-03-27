@@ -15,6 +15,7 @@ import { MoreVert, Edit, Done } from "@mui/icons-material";
 import { useMutation, useQueryClient } from "react-query";
 import { moveProductToInventory } from "./api_calls";
 import { useCustomSnackbar } from "./snackbar_utils";
+import EditProductDialog from "./EditProductDialog";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -44,6 +45,17 @@ const PickupProductCard = ({ product }) => {
     console.log("Exporting product", product);
   };
 
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
+
+  const handleEditClick = () => {
+    setAnchorEl(null);
+    setEditDialogOpen(true); // <-- Open the edit dialog
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false); // <-- Close the edit dialog
+  };
+
   const handleMoveToStorageClick = () => {
     moveToStorageMutation.mutate({ pid: product.did });
   };
@@ -59,6 +71,11 @@ const PickupProductCard = ({ product }) => {
 
   return (
     <StyledCard>
+      <EditProductDialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        initialProduct={product}
+      />
       <CardActionArea>
         <CardMedia
           component="img"
@@ -87,7 +104,7 @@ const PickupProductCard = ({ product }) => {
         <IconButton onClick={handleMoveToStorageClick} aria-label="move to storage">
           <Done />
         </IconButton>
-        <IconButton aria-label="edit product">
+        <IconButton onClick={handleEditClick} aria-label="edit product">
           <Edit />
         </IconButton>
         <IconButton
