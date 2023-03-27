@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MoreVert, Edit, Done } from "@mui/icons-material";
+import { MoreVert, Edit, Done, Delete } from "@mui/icons-material";
 import { useMutation, useQueryClient } from "react-query";
 import { moveProductToInventory } from "./api_calls";
 import { useCustomSnackbar } from "./snackbar_utils";
@@ -40,9 +40,9 @@ const PickupProductCard = ({ product }) => {
     setAnchorEl(null);
   };
 
-  const handleMenuExport = () => {
+  const handleMenuDelete = () => {
     setAnchorEl(null);
-    console.log("Exporting product", product);
+    console.log("Deleting product", product);
   };
 
   const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
@@ -116,15 +116,16 @@ const PickupProductCard = ({ product }) => {
           <MoreVert />
         </IconButton>
         <Menu
-          id="product-card-menu"
+          id="pickup-product-card-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuExport}>Export</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-
+          <MenuItem onClick={handleMenuDelete}>
+            <Delete sx={{ ml: 1 }} />
+            מחק מוצר
+          </MenuItem>
         </Menu>
       </div>
     </StyledCard>
