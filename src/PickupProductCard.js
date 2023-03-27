@@ -48,7 +48,7 @@ const PickupProductCard = ({ product }) => {
           title={product.name}
         />
         <Chip
-          label={`${product.quantity} במלאי`}
+          label={`${product.amount} במלאי`}
           color="secondary"
           style={{ position: "absolute", top: "10px", left: "10px" }}
         />

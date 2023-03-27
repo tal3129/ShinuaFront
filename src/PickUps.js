@@ -54,7 +54,7 @@ const Pickups = () => {
           <CardContent>
 
             <ExpandableProductGallery
-              products={pickup.ordered_products}
+              products={pickup.products}
             />
             <Menu
               id="pickup-menu"
