@@ -49,6 +49,13 @@ export function addProductToOrder({oid, pid, amount}) {
     });
 }
 
+export function moveProductToInventory({pid}) {
+  return axios
+    .post(`http://${API_HOST}:${API_PORT}/move_product_to_inventory`, {
+      pid: pid,
+    });
+}
+
 // Function to edit product using API
 export function editProduct(product) {
   return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product);
