@@ -59,7 +59,7 @@ function OrderPage() {
 
   This function will build the updated order object from the new details and the new ordered products.
 */
-  const buildOrderForSaving = ({orderDetails, newOrderedProducts}) => {
+  const buildOrderForSaving = ({ orderDetails, newOrderedProducts }) => {
     const productToAmountMap = {};
     newOrderedProducts.forEach((orderedProduct) => {
       productToAmountMap[orderedProduct.product.did] = orderedProduct.amount;
@@ -78,18 +78,18 @@ function OrderPage() {
 
   const queryClient = useQueryClient();
   const editOrderMutation = useMutation(editOrder, {
-      onSuccess: () => {
-          showSuccessSnackbar("edit-order-success", "ההזמנה עודכנה בהצלחה");
-          queryClient.invalidateQueries('orders');
-      },
-      onError: () => {
-          showErrorSnackbar("edit-order-error", "אירעה שגיאה בעת עדכון ההזמנה");
-      }
+    onSuccess: () => {
+      showSuccessSnackbar("edit-order-success", "ההזמנה עודכנה בהצלחה");
+      queryClient.invalidateQueries('orders');
+    },
+    onError: () => {
+      showErrorSnackbar("edit-order-error", "אירעה שגיאה בעת עדכון ההזמנה");
+    }
   });
 
 
   const handleOrderDialogSave = (newOrderDetails) => {
-    const updatedOrder = buildOrderForSaving({orderDetails: newOrderDetails, newOrderedProducts});
+    const updatedOrder = buildOrderForSaving({ orderDetails: newOrderDetails, newOrderedProducts });
     console.log(updatedOrder);
     setOrderChanged(false);
     editOrderMutation.mutate(updatedOrder);
@@ -97,7 +97,7 @@ function OrderPage() {
   };
 
   const handleSave = () => {
-    const updatedOrder = buildOrderForSaving({orderDetails, newOrderedProducts});
+    const updatedOrder = buildOrderForSaving({ orderDetails, newOrderedProducts });
     console.log(updatedOrder);
     setOrderChanged(false);
     editOrderMutation.mutate(updatedOrder);
@@ -105,6 +105,14 @@ function OrderPage() {
 
   const handleEdit = () => {
     setEditOpen(true);
+  };
+
+  const deleteProductFromOrder = (product) => {
+    const updatedOrderedProducts = newOrderedProducts.filter((orderedProduct) => {
+      return orderedProduct.product.did !== product.did;
+    });
+    setNewOrderedProducts(updatedOrderedProducts);
+    setOrderChanged(true);
   };
 
   return (
@@ -136,7 +144,7 @@ function OrderPage() {
                   product={orderedProduct.product}
                   amount={orderedProduct.amount}
                   onAmountChange={handleAmountChange(index)}
-                  onDeleteProduct={() => { }}
+                  onDeleteProduct={() => { deleteProductFromOrder(orderedProduct.product) }}
                 />
               ))}
             </List>
