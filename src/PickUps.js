@@ -2,12 +2,13 @@ import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Stack, Tab, 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { getPickups } from "./api_calls";
+import { deletePickup, getPickups } from "./api_calls";
 import ExpandableProductGallery from './ExpandableProductGallery';
 import { convertDateToHebrewString } from './Utils';
+import { useCustomSnackbar } from './snackbar_utils';
 
 const Pickups = () => {
   const { data: pickups, isFetching: isLoadingPickups } = useQuery({
@@ -29,8 +30,21 @@ const Pickups = () => {
     setAnchorEl(null);
   };
 
-  const handleDeletePickup = () => {
-    //TODO: Implement delete pickup functionality
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
+  const queryClient = useQueryClient();
+  const deletePickupMutation = useMutation(deletePickup, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('pickups');
+      showSuccessSnackbar('pickup-delete-success', 'האיסוף נמחק בהצלחה');
+    },
+    onError: () => {
+      showErrorSnackbar('pickup-delete-failed', 'אירעה שגיאה במחיקת האיסוף');
+    }
+  });
+
+  const handleDeletePickup = (pickup) => {
+    deletePickupMutation.mutate(pickup.did);
+    handleMenuClose();
   };
 
   return (
@@ -71,7 +85,7 @@ const Pickups = () => {
               open={Boolean(anchorEl) && selectedPickup === pickup}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleDeletePickup}>
+              <MenuItem onClick={() => handleDeletePickup(pickup)}>
                 <DeleteIcon sx={{ ml: 1 }} />
                 מחק איסוף
               </MenuItem>

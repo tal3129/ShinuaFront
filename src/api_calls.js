@@ -84,3 +84,9 @@ export function deleteOrder(oid) {
     did: oid,
   });
 }
+
+export function deletePickup(pickupId) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/delete_pickup`, {
+    did: pickupId,
+  });
+}
