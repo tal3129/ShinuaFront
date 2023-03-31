@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   Card,
@@ -11,7 +11,12 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MoreVert, Edit, Add } from "@mui/icons-material";
+import { MoreVert, Edit, Add, Delete } from "@mui/icons-material";
+import AddToOrderDialog from "./AddProductToOrderButton";
+import EditProductDialog from "./EditProductDialog";
+import { deleteProduct } from "./api_calls";
+import { useMutation, useQueryClient } from "react-query";
+import { Stack } from "@mui/system";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -24,6 +29,14 @@ const StyledCardContent = styled(CardContent)`
 
 const ProductCard = ({ product }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
+
+  const queryClient = useQueryClient();
+  const deleteProductMutation = useMutation(deleteProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('catalog');
+    },
+  });
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -33,42 +46,82 @@ const ProductCard = ({ product }) => {
     setAnchorEl(null);
   };
 
-  const handleMenuExport = () => {
+  const handleMenuDelete = () => {
     setAnchorEl(null);
-    console.log("Exporting product", product);
+    console.log(product);
+    deleteProductMutation.mutate(product.did);
+  }
+
+  const handleAddOrderClick = (event) => {
+    handleOpenAddToOrder();
+  };
+
+  const [openAddToOrder, setOpenAddToOrder] = useState(false);
+
+  const handleOpenAddToOrder = () => {
+    setOpenAddToOrder(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddToOrder(false);
+  };
+
+  const handleEditClick = () => {
+    setAnchorEl(null);
+    setEditDialogOpen(true); // <-- Open the edit dialog
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false); // <-- Close the edit dialog
   };
 
   return (
     <StyledCard>
+      <AddToOrderDialog
+        open={openAddToOrder}
+        onClose={handleClose}
+        product={product}
+        dir="rtl"
+      />
+      <EditProductDialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        initialProduct={product}
+      />
       <CardActionArea>
         <CardMedia
           component="img"
           height="160"
-          image={product.image}
+          image={product.image_url_list ? product.image_url_list[0] : null}
           title={product.name}
         />
-        <Chip
-          label={`${product.quantity} במלאי`}
-          color="secondary"
-          style={{ position: "absolute", top: "10px", left: "10px" }}
-        />
+        <Stack direction="column" spacing={1} sx={{ position: "absolute", top: "10px", right: "10px" }}>
+          <Chip
+            label={`${product.amount} במלאי`}
+            color="secondary"
+          />
+          {product.reserved != 0 && <Chip
+            label={`${product.reserved} שמורים`}
+            color="success"
+          />}
+        </Stack>
       </CardActionArea>
       <StyledCardContent>
         <Typography gutterBottom variant="h5" component="h2">
           {product.name}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary">
-          {product.sender}
+          {product.origin}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
           {product.description}
         </Typography>
       </StyledCardContent>
       <div>
-        <IconButton aria-label="add to favorites">
+        <IconButton aria-label="add to favorites" onClick={handleAddOrderClick}>
           <Add />
         </IconButton>
-        <IconButton aria-label="edit product">
+        <IconButton aria-label="edit product" onClick={handleEditClick}>
           <Edit />
         </IconButton>
         <IconButton
@@ -86,9 +139,10 @@ const ProductCard = ({ product }) => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuExport}>Export</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          
+          <MenuItem onClick={handleMenuDelete}>
+            <Delete sx={{ ml: 1 }} />
+            מחק מוצר
+          </MenuItem>
         </Menu>
       </div>
     </StyledCard>

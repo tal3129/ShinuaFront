@@ -1,59 +1,39 @@
 import React from "react";
 import Catalog from "./Catalog";
+import PickUps from "./PickUps";
+import Pickup from "./Pickup";
+import Orders from "./Orders";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import { Box } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "react-query";
+import OrderPage from "./OrderPage";
+import { SnackbarProvider } from "notistack";
+
+const queryClient = new QueryClient();
 
 function App() {
-  const products = [
-    {
-      id: 1,
-      name: "שמפו",
-      sender: "L'Oreal",
-      description: "שמפו לאיתמר לצרכי השיער המיוחדים שלך",
-      quantity: 10,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      name: "משחת שיניים",
-      sender: "קולגייט",
-      description: "Fluoride toothpaste for cavity protection",
-      quantity: 20,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 3,
-      name: "Soap",
-      sender: "Dove",
-      description: "Gentle cleansing bar for sensitive skin",
-      quantity: 15,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 4,
-      name: "Krupik",
-      sender: "Dove",
-      description: "skin",
-      quantity: 15,
-      image: "https://via.placeholder.com/150",
-    },
-  ];
 
   return (
-    <BrowserRouter>
-    <Box sx={{ flexGrow: 1 }}>
-      <Navbar />
-      <Box sx={{ p: 2 }}>
-        <Routes>
-          <Route path="/" element={<Catalog products={products}/>} />
-          <Route path="/catalog" element={<Catalog products={products}/>} />
-          {/* <Route path="/collections" element={<Collections />} /> */}
-          {/* <Route path="/orders" element={<Orders />} /> */}
-        </Routes>
-      </Box>
-    </Box>
-  </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <SnackbarProvider>
+        <BrowserRouter>
+          <Box sx={{ flexGrow: 1 }}>
+            <Navbar />
+            <Box sx={{ p: 2 }}>
+              <Routes>
+                <Route path="/" element={<Catalog />} />
+                <Route path="/catalog" element={<Catalog />} />
+                {<Route path="/pickups" element={<PickUps />} />}
+                {<Route path="/pickups/:id" element={<Pickup />} />}
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/orders/:id" element={<OrderPage />} />
+              </Routes>
+            </Box>
+          </Box>
+        </BrowserRouter>
+      </SnackbarProvider>
+    </QueryClientProvider>
   );
 }
 
