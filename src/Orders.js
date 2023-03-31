@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Badge, Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
@@ -15,6 +15,8 @@ const Orders = () => {
     queryFn: getOrders,
     placeholderData: [],
   });
+
+  const openOrdersCount = orders ? orders.filter(order => !order.is_finished).length : 0;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedOrder, setSelectedOrder] = React.useState(null);
@@ -50,7 +52,11 @@ const Orders = () => {
   return (
     <Stack spacing={2} sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
       <Tabs aria-label="order tabs" centered value={0}>
-        <Tab label="הזמנות פתוחות" />
+        <Tab label={
+          <Badge badgeContent={openOrdersCount} color="secondary" sx={{ pl: 1.5, pt: 0.5 }} anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
+            הזמנות פתוחות
+          </Badge>
+        } />
         <Tab label="הזמנות שהסתיימו" />
       </Tabs>
       {orders && orders.map((order) => (
@@ -73,7 +79,7 @@ const Orders = () => {
           <CardContent>
 
             <ExpandableProductGallery
-              products={order.ordered_products.map((orderedProduct) => ( orderedProduct.product ))}
+              products={order.ordered_products.map((orderedProduct) => (orderedProduct.product))}
             />
             <Menu
               id="order-menu"
