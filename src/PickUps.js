@@ -1,116 +1,95 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
-import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
+import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteIcon from '@mui/icons-material/Delete';
+import React from 'react';
+import { useQuery } from "react-query";
 import { Link } from 'react-router-dom';
-import { usePickups } from "./api_calls";
-import ProductDialog from './ProductDialog';
+import styled from 'styled-components';
+import { getPickups } from "./api_calls";
+import ExpandableProductGallery from './ExpandableProductGallery';
 
-const PickUps = () => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [expandedPickups, setExpandedPickups] = useState([]);
+const Pickups = () => {
+  const { data: pickups, isFetching: isLoadingPickups } = useQuery({
+    queryKey: 'pickups',
+    queryFn: getPickups,
+    placeholderData: [],
+  });
 
-  const { pickups } = usePickups();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedPickup, setSelectedPickup] = React.useState(null);
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
+  const handleMenuClick = (event, pickup) => {
+    setSelectedPickup(pickup);
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseDialog = () => {
-    setSelectedProduct(null);
+  const handleMenuClose = () => {
+    setSelectedPickup(null);
+    setAnchorEl(null);
   };
 
-  const handleExpandPickup = (pickup) => {
-    console.log(expandedPickups);
-    if (expandedPickups.includes(pickup)) {
-      setExpandedPickups((prevExpandedPickups) => prevExpandedPickups.filter((p) => p !== pickup));
-    } else {
-      setExpandedPickups((prevExpandedPickups) => [...prevExpandedPickups, pickup]);
-    }
+  const handleDeletePickup = () => {
+    //TODO: Implement delete pickup functionality
   };
-
-  const MAX_PRODUCTS = 8;
-
-  const getProductsToShow = (products) => {
-    if (products.length <= MAX_PRODUCTS) {
-      return products;
-    } else {
-      return products.slice(0, MAX_PRODUCTS);
-    }
-  };
-
-  const getMoreProducts = (products) => {
-    if (products.length <= MAX_PRODUCTS) {
-      return [];
-    } else {
-      return products.slice(MAX_PRODUCTS);
-    }
-  };
-
-  const shouldShowAllImages = (pickup) => expandedPickups.includes(pickup);
 
   return (
-    <Container>
-      {pickups.map((pickup) => (
-        <Card key={pickup.name}>
-          <CardContent>
-            <Link key={pickup.id} to={{ pathname: `/pickups/${pickup.id}` }} state={{ pickup }}>
+    <Stack spacing={2} sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
+      {pickups && pickups.map((pickup) => (
+        <Card key={pickup.name} variant='outlined'>
+          <CardHeader
+            title={<StyledLink key={pickup.did} to={{ pathname: `/pickups/${pickup.did}` }} state={{ pickup }}>
               <Typography variant="h5" gutterBottom>
                 {pickup.name}
               </Typography>
-            </Link>
-            <Typography variant="subtitle1" gutterBottom>
-              {pickup.address}
-            </Typography>
-            <Grid container spacing={2}>
-              {(shouldShowAllImages(pickup) ? pickup.products : getProductsToShow(pickup.products)).map((product) => (
-                <Grid item key={product.id}>
-                  <ProductImage src={product.image_url_list ? product.image_url_list[0] : null} alt={product.name} onClick={() => handleProductClick(product)} />
-                </Grid>
-              ))}
-              {pickup.products.length > MAX_PRODUCTS && (
-                <Grid item>
-                  <IconButton onClick={() => handleExpandPickup(pickup)}>
-                    {shouldShowAllImages(pickup) ? (
-                      <React.Fragment>
-                        <Typography>Show less</Typography>
-                        <ExpandLessIcon />
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <Typography>Show more</Typography>
-                        <ExpandMoreIcon />
-                      </React.Fragment>
-                    )}
-                  </IconButton>
-                </Grid>
-              )}
-            </Grid>
-            {shouldShowAllImages(pickup) && (
-              <Grid container spacing={2}>
-                {getMoreProducts(pickup.products).map((product) => (
-                  <Grid item key={product.id}>
-                    <ProductImage src={product.image_url_list ? product.image_url_list[0] : null} alt={product.name} onClick={() => handleProductClick(product)} />
-                  </Grid>
-                ))}
-              </Grid>
-            )}
+              <Typography variant="subtitle1" gutterBottom>
+                {pickup.address}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                {
+                  new Date(pickup.date).toLocaleDateString('he-IL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                }
+              </Typography>
+            </StyledLink>}
+            subheader={pickup.description}
+            action={
+              <IconButton
+                aria-controls="pickup-menu"
+                aria-haspopup="true"
+                onClick={(e) => handleMenuClick(e, pickup)}
+              >
+                <MoreVertIcon />
+              </IconButton>} />
+          <CardContent>
+
+            <ExpandableProductGallery
+              products={pickup.products}
+            />
+            <Menu
+              id="pickup-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl) && selectedPickup === pickup}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleDeletePickup}>
+                <DeleteIcon sx={{ ml: 1 }} />
+                מחק איסוף
+              </MenuItem>
+            </Menu>
           </CardContent>
         </Card>
       ))}
-      <ProductDialog open={selectedProduct !== null} onClose={handleCloseDialog} product={selectedProduct} />
-    </Container>
+    </Stack>
   );
 };
 
-const Container = styled.div`
-  display: grid;
-  grid-row-gap: 24px;
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
 `;
 
-const ProductImage = styled.img`
-  cursor: pointer;
-  height: 100px;
-`;
-
-export default PickUps;
+export default Pickups;

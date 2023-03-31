@@ -16,6 +16,15 @@ export function getOrders() {
     .then((response) => (response.data));
 }
 
+export function getPickups() {
+  return axios
+    .get(`http://${API_HOST}:${API_PORT}/get_pickups`)
+    .then((response) => (response.data))
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
 export function createOrder(order) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/add_order`, {
@@ -31,7 +40,7 @@ export function createOrder(order) {
     });
 }
 
-export function addProductToOrder({oid, pid, amount}) {
+export function addProductToOrder({ oid, pid, amount }) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/add_product_to_order`, {
       pid: pid,
@@ -39,6 +48,22 @@ export function addProductToOrder({oid, pid, amount}) {
       amount: amount,
     });
 }
+
+export function moveProductToInventory({ pid }) {
+  return axios
+    .post(`http://${API_HOST}:${API_PORT}/move_product_to_inventory`, {
+      pid: pid,
+    });
+}
+
+// TODO: create this in backend
+export function movePickupToInventory({ pickupId }) {
+  return axios
+    .post(`http://${API_HOST}:${API_PORT}/move_pickup_to_inventory`, {
+      pickup_id: pickupId,
+    });
+}
+
 
 // Function to edit product using API
 export function editProduct(product) {
@@ -49,29 +74,4 @@ export function deleteProduct(pid) {
   return axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
     pid: pid,
   });
-}
-
-export function usePickups() {
-  const [pickups, setPickups] = useState([]);
-
-  function fetchPickups() {
-    axios
-      .get(`http://${API_HOST}:${API_PORT}/get_pickups`)
-      .then((response) => {
-        setPickups(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  // Fetch once when the page loads
-  useEffect(() => {
-    fetchPickups();
-  }, []);
-
-  return {
-    pickups,
-    fetchPickups,
-  };
 }

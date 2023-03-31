@@ -11,7 +11,11 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MoreVert, Edit, Done } from "@mui/icons-material";
+import { MoreVert, Edit, Done, Delete } from "@mui/icons-material";
+import { useMutation, useQueryClient } from "react-query";
+import { moveProductToInventory } from "./api_calls";
+import { useCustomSnackbar } from "./snackbar_utils";
+import EditProductDialog from "./EditProductDialog";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -25,6 +29,9 @@ const StyledCardContent = styled(CardContent)`
 const PickupProductCard = ({ product }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const queryClient = useQueryClient();
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
+
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -33,13 +40,42 @@ const PickupProductCard = ({ product }) => {
     setAnchorEl(null);
   };
 
-  const handleMenuExport = () => {
+  const handleMenuDelete = () => {
     setAnchorEl(null);
-    console.log("Exporting product", product);
+    console.log("Deleting product", product);
   };
+
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
+
+  const handleEditClick = () => {
+    setAnchorEl(null);
+    setEditDialogOpen(true); // <-- Open the edit dialog
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false); // <-- Close the edit dialog
+  };
+
+  const handleMoveToStorageClick = () => {
+    moveToStorageMutation.mutate({ pid: product.did });
+  };
+
+  const moveToStorageMutation = useMutation(moveProductToInventory, {
+    onSuccess: () => {
+      showSuccessSnackbar("product-moved-to-storage-success", "המוצר הועבר למלאי");
+      queryClient.invalidateQueries("pickups");
+      queryClient.invalidateQueries("catalog");
+    },
+  });
+
 
   return (
     <StyledCard>
+      <EditProductDialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        initialProduct={product}
+      />
       <CardActionArea>
         <CardMedia
           component="img"
@@ -48,7 +84,7 @@ const PickupProductCard = ({ product }) => {
           title={product.name}
         />
         <Chip
-          label={`${product.quantity} במלאי`}
+          label={`${product.amount} פריטים`}
           color="secondary"
           style={{ position: "absolute", top: "10px", left: "10px" }}
         />
@@ -65,10 +101,10 @@ const PickupProductCard = ({ product }) => {
         </Typography>
       </StyledCardContent>
       <div>
-        <IconButton aria-label="add to favorites">
+        <IconButton onClick={handleMoveToStorageClick} aria-label="move to storage">
           <Done />
         </IconButton>
-        <IconButton aria-label="edit product">
+        <IconButton onClick={handleEditClick} aria-label="edit product">
           <Edit />
         </IconButton>
         <IconButton
@@ -80,15 +116,16 @@ const PickupProductCard = ({ product }) => {
           <MoreVert />
         </IconButton>
         <Menu
-          id="product-card-menu"
+          id="pickup-product-card-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuExport}>Export</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          
+          <MenuItem onClick={handleMenuDelete}>
+            <Delete sx={{ ml: 1 }} />
+            מחק מוצר
+          </MenuItem>
         </Menu>
       </div>
     </StyledCard>
