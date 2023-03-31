@@ -6,6 +6,7 @@ import MultipleImagesUpload from "./MultipleImagesUpload";
 import { editProduct } from "./api_calls";
 import { useMutation, useQueryClient } from "react-query";
 import { useCustomSnackbar } from "./snackbar_utils";
+import { useEffect } from "react";
 
 const EditProductDialog = ({ open, onClose, initialProduct }) => {
     const queryClient = useQueryClient();
@@ -21,6 +22,11 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
     });
 
     const [values, setValues] = useState(initialProduct);
+
+    useEffect(() => {
+        setValues(initialProduct);
+    }, [initialProduct]);
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -106,8 +112,8 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
                     value={values.status}
                     onChange={handleChange}
                 >
-                    <MenuItem value={1}>במחסן</MenuItem>
                     <MenuItem value={0}>בשטח</MenuItem>
+                    <MenuItem value={1}>במחסן</MenuItem>
                 </Select>
                 <MultipleImagesUpload onImageChange={handleImageChange} />
             </DialogContent>
