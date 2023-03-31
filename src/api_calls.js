@@ -31,7 +31,7 @@ export function createOrder(order) {
       name: order.name,
       address: order.address,
       description: order.description,
-      date: new Date().toISOString(),
+      date: order.date,
       status: order.status,
       ordered_products: {
         // No products yet :(
