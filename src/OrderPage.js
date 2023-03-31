@@ -1,5 +1,6 @@
 import { ArrowBack, Edit, Save } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -19,6 +20,7 @@ function OrderPage() {
     name: order.name,
     date: order.date,
     address: order.address,
+    date: order.date,
     description: order.description,
     status: order.status
   });
@@ -57,7 +59,7 @@ function OrderPage() {
 
   This function will build the updated order object from the new details and the new ordered products.
 */
-  const buildOrderForSaving = () => {
+  const buildOrderForSaving = ({orderDetails, newOrderedProducts}) => {
     const productToAmountMap = {};
     newOrderedProducts.forEach((orderedProduct) => {
       productToAmountMap[orderedProduct.product.did] = orderedProduct.amount;
@@ -86,8 +88,17 @@ function OrderPage() {
   });
 
 
+  const handleOrderDialogSave = (newOrderDetails) => {
+    const updatedOrder = buildOrderForSaving({orderDetails: newOrderDetails, newOrderedProducts});
+    console.log(updatedOrder);
+    setOrderChanged(false);
+    editOrderMutation.mutate(updatedOrder);
+
+  };
+
   const handleSave = () => {
-    const updatedOrder = buildOrderForSaving();
+    const updatedOrder = buildOrderForSaving({orderDetails, newOrderedProducts});
+    console.log(updatedOrder);
     setOrderChanged(false);
     editOrderMutation.mutate(updatedOrder);
   };
@@ -136,7 +147,7 @@ function OrderPage() {
           onClose={handleEditClose}
           orderData={orderDetails}
           setOrderData={setOrderDetails}
-          onSubmit={handleSave}
+          onSubmit={handleOrderDialogSave}
         />
       </Card>
     </Box >
