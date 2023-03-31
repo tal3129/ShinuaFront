@@ -33,11 +33,11 @@ const Orders = () => {
   const queryClient = useQueryClient();
   const deleteOrderMutation = useMutation(deleteOrder, {
     onSuccess: () => {
-      showSuccessSnackbar('ההזמנה נמחקה בהצלחה');
+      showSuccessSnackbar('order-delete-success', 'ההזמנה נמחקה בהצלחה');
       queryClient.invalidateQueries('orders');
     },
     onError: () => {
-      showErrorSnackbar('אירעה שגיאה במחיקת ההזמנה');
+      showErrorSnackbar('order-delete-failed', 'אירעה שגיאה במחיקת ההזמנה');
     }
   });
 
