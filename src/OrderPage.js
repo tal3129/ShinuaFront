@@ -1,11 +1,15 @@
 import { ArrowBack, Edit, Save } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { editOrder } from './api_calls';
 import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
 import OrderDetailsDialog from './OrderDetailsDialog';
 import OrderListItem from './OrderListItem';
+import { useCustomSnackbar } from './snackbar_utils';
 
 function OrderPage() {
   const navigate = useNavigate();
@@ -15,11 +19,16 @@ function OrderPage() {
   const [orderDetails, setOrderDetails] = useState({
     name: order.name,
     date: order.date,
-    address: order.address
+    address: order.address,
+    date: order.date,
+    description: order.description,
+    status: order.status
   });
   const [newOrderedProducts, setNewOrderedProducts] = useState(order.ordered_products);
   const [orderChanged, setOrderChanged] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
 
   const handleEditClose = () => {
     setEditOpen(false);
@@ -32,24 +41,78 @@ function OrderPage() {
     setOrderChanged(true);
   };
 
-  const handleSave = () => {
-    const updatedOrder = {
+  /*
+  This is the format of the order to be sent for saving to the server:
+  {
+    "did": "string",
+    "name": "string",
+    "address": "string",
+    "description": "string",
+    "date": "2023-03-31T14:33:46.099Z",
+    "ordered_products": {
+      "additionalProp1": 0,
+      "additionalProp2": 0,
+      "additionalProp3": 0
+    },
+    "status": 0
+  }
+
+  This function will build the updated order object from the new details and the new ordered products.
+*/
+  const buildOrderForSaving = ({ orderDetails, newOrderedProducts }) => {
+    const productToAmountMap = {};
+    newOrderedProducts.forEach((orderedProduct) => {
+      productToAmountMap[orderedProduct.product.did] = orderedProduct.amount;
+    });
+
+    return {
       did: order.did,
-      description: order.description,
-      date: order.date,
-      status: order.status,
+      name: orderDetails.name,
       address: orderDetails.address,
-      ordered_products: newOrderedProducts.map(({ did, name, description, image_url_list, status, amount, reserved, origin }) => ({ did, name, description, image_url_list, status, amount, reserved, origin })),
-      name: orderDetails.name
+      description: orderDetails.description,
+      date: orderDetails.date,
+      ordered_products: productToAmountMap,
+      status: orderDetails.status
     };
-    setOrderChanged(false);
-    console.log("Saving order:");
+  };
+
+  const queryClient = useQueryClient();
+  const editOrderMutation = useMutation(editOrder, {
+    onSuccess: () => {
+      showSuccessSnackbar("edit-order-success", "ההזמנה עודכנה בהצלחה");
+      queryClient.invalidateQueries('orders');
+    },
+    onError: () => {
+      showErrorSnackbar("edit-order-error", "אירעה שגיאה בעת עדכון ההזמנה");
+    }
+  });
+
+
+  const handleOrderDialogSave = (newOrderDetails) => {
+    const updatedOrder = buildOrderForSaving({ orderDetails: newOrderDetails, newOrderedProducts });
     console.log(updatedOrder);
-    // Save
+    setOrderChanged(false);
+    editOrderMutation.mutate(updatedOrder);
+
+  };
+
+  const handleSave = () => {
+    const updatedOrder = buildOrderForSaving({ orderDetails, newOrderedProducts });
+    console.log(updatedOrder);
+    setOrderChanged(false);
+    editOrderMutation.mutate(updatedOrder);
   };
 
   const handleEdit = () => {
     setEditOpen(true);
+  };
+
+  const deleteProductFromOrder = (product) => {
+    const updatedOrderedProducts = newOrderedProducts.filter((orderedProduct) => {
+      return orderedProduct.product.did !== product.did;
+    });
+    setNewOrderedProducts(updatedOrderedProducts);
+    setOrderChanged(true);
   };
 
   return (
@@ -75,13 +138,13 @@ function OrderPage() {
           <OrderDetails order={orderDetails} />
           <Stack sx={{ width: '100%' }}>
             <List sx={{ backgroundColor: 'background.paper', overflow: 'auto', maxHeight: '360px' }}>
-              {newOrderedProducts.map((product, index) => (
+              {newOrderedProducts.map((orderedProduct, index) => (
                 <OrderListItem
                   key={index}
-                  product={product}
-                  amount={product.amount}
+                  product={orderedProduct.product}
+                  amount={orderedProduct.amount}
                   onAmountChange={handleAmountChange(index)}
-                  onDeleteProduct={() => { }}
+                  onDeleteProduct={() => { deleteProductFromOrder(orderedProduct.product) }}
                 />
               ))}
             </List>
@@ -92,7 +155,7 @@ function OrderPage() {
           onClose={handleEditClose}
           orderData={orderDetails}
           setOrderData={setOrderDetails}
-          onSubmit={() => setOrderChanged(true)}
+          onSubmit={handleOrderDialogSave}
         />
       </Card>
     </Box >

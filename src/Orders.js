@@ -2,11 +2,12 @@ import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Stack, Tab, 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { getOrders } from "./api_calls";
+import { deleteOrder, getOrders } from "./api_calls";
 import ExpandableProductGallery from './ExpandableProductGallery';
+import { useCustomSnackbar } from './snackbar_utils';
 
 const Orders = () => {
   const { data: orders, isFetching: isLoadingOrders } = useQuery({
@@ -28,8 +29,22 @@ const Orders = () => {
     setAnchorEl(null);
   };
 
-  const handleDeleteOrder = () => {
-    //TODO: Implement delete order functionality
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
+  const queryClient = useQueryClient();
+  const deleteOrderMutation = useMutation(deleteOrder, {
+    onSuccess: () => {
+      showSuccessSnackbar('order-delete-success', 'ההזמנה נמחקה בהצלחה');
+      queryClient.invalidateQueries('orders');
+    },
+    onError: () => {
+      showErrorSnackbar('order-delete-failed', 'אירעה שגיאה במחיקת ההזמנה');
+    }
+  });
+
+
+  const handleDeleteOrder = (order) => {
+    deleteOrderMutation.mutate(order.did);
+    handleMenuClose();
   };
 
   return (
@@ -38,7 +53,7 @@ const Orders = () => {
         <Tab label="הזמנות פתוחות" />
         <Tab label="הזמנות שהסתיימו" />
       </Tabs>
-      {orders.map((order) => (
+      {orders && orders.map((order) => (
         <Card key={order.name} variant='outlined'>
           <CardHeader
             title={<StyledLink key={order.did} to={{ pathname: `/orders/${order.did}` }} state={{ order }}>
@@ -58,7 +73,7 @@ const Orders = () => {
           <CardContent>
 
             <ExpandableProductGallery
-              products={order.ordered_products}
+              products={order.ordered_products.map((orderedProduct) => ( orderedProduct.product ))}
             />
             <Menu
               id="order-menu"
@@ -66,7 +81,7 @@ const Orders = () => {
               open={Boolean(anchorEl) && selectedOrder === order}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleDeleteOrder}>
+              <MenuItem onClick={() => { handleDeleteOrder(order) }}>
                 <DeleteIcon sx={{ ml: 1 }} />
                 מחק הזמנה
               </MenuItem>

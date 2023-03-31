@@ -24,6 +24,7 @@ const AddToOrderDialog = ({ open, onClose, product }) => {
   const [orderData, setOrderData] = useState({
     name: "",
     description: "",
+    date: new Date().toISOString(),
     recipient: "",
     address: "",
     contactName: "",
