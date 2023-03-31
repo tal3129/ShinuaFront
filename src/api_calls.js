@@ -40,7 +40,7 @@ export function createOrder(order) {
     });
 }
 
-export function addProductToOrder({oid, pid, amount}) {
+export function addProductToOrder({ oid, pid, amount }) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/add_product_to_order`, {
       pid: pid,
@@ -49,7 +49,7 @@ export function addProductToOrder({oid, pid, amount}) {
     });
 }
 
-export function moveProductToInventory({pid}) {
+export function moveProductToInventory({ pid }) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/move_product_to_inventory`, {
       pid: pid,
@@ -57,7 +57,7 @@ export function moveProductToInventory({pid}) {
 }
 
 // TODO: create this in backend
-export function movePickupToInventory({pickupId}) {
+export function movePickupToInventory({ pickupId }) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/move_pickup_to_inventory`, {
       pickup_id: pickupId,

@@ -41,6 +41,19 @@ const Pickups = () => {
               <Typography variant="h5" gutterBottom>
                 {pickup.name}
               </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                {pickup.address}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                {
+                  new Date(pickup.date).toLocaleDateString('he-IL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                }
+              </Typography>
             </StyledLink>}
             subheader={pickup.description}
             action={
