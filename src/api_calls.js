@@ -69,6 +69,10 @@ export function editProduct(product) {
   return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product);
 }
 
+export function editOrder(order) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/edit_order`, order);
+}
+
 export function deleteProduct(pid) {
   return axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
     pid: pid,

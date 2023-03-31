@@ -1,11 +1,14 @@
 import { ArrowBack, Edit, Save } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { editOrder } from './api_calls';
 import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
 import OrderDetailsDialog from './OrderDetailsDialog';
 import OrderListItem from './OrderListItem';
+import { useCustomSnackbar } from './snackbar_utils';
 
 function OrderPage() {
   const navigate = useNavigate();
@@ -22,6 +25,8 @@ function OrderPage() {
   const [newOrderedProducts, setNewOrderedProducts] = useState(order.ordered_products);
   const [orderChanged, setOrderChanged] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
 
   const handleEditClose = () => {
     setEditOpen(false);
@@ -54,8 +59,8 @@ function OrderPage() {
 */
   const buildOrderForSaving = () => {
     const productToAmountMap = {};
-    newOrderedProducts.forEach((product) => {
-      productToAmountMap[product.did] = product.amount;
+    newOrderedProducts.forEach((orderedProduct) => {
+      productToAmountMap[orderedProduct.product.did] = orderedProduct.amount;
     });
 
     return {
@@ -69,12 +74,22 @@ function OrderPage() {
     };
   };
 
+  const queryClient = useQueryClient();
+  const editOrderMutation = useMutation(editOrder, {
+      onSuccess: () => {
+          showSuccessSnackbar("edit-order-success", "ההזמנה עודכנה בהצלחה");
+          queryClient.invalidateQueries('orders');
+      },
+      onError: () => {
+          showErrorSnackbar("edit-order-error", "אירעה שגיאה בעת עדכון ההזמנה");
+      }
+  });
+
+
   const handleSave = () => {
     const updatedOrder = buildOrderForSaving();
     setOrderChanged(false);
-    console.log("Saving order:");
-
-    console.log(updatedOrder);
+    editOrderMutation.mutate(updatedOrder);
   };
 
   const handleEdit = () => {
@@ -121,7 +136,7 @@ function OrderPage() {
           onClose={handleEditClose}
           orderData={orderDetails}
           setOrderData={setOrderDetails}
-          onSubmit={() => setOrderChanged(true)}
+          onSubmit={handleSave}
         />
       </Card>
     </Box >

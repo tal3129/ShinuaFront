@@ -53,7 +53,7 @@ const Orders = () => {
         <Tab label="הזמנות פתוחות" />
         <Tab label="הזמנות שהסתיימו" />
       </Tabs>
-      {orders.map((order) => (
+      {orders && orders.map((order) => (
         <Card key={order.name} variant='outlined'>
           <CardHeader
             title={<StyledLink key={order.did} to={{ pathname: `/orders/${order.did}` }} state={{ order }}>
