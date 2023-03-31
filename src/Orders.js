@@ -52,7 +52,7 @@ const Orders = ({ orders, status }) => {
   const filteredOrders = orders.filter(order => order.status === status);
 
   return (
-    <>
+    <Stack spacing={2} sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }}>
       {filteredOrders && filteredOrders.map((order) => (
         <Card key={order.name} variant='outlined'>
           <CardHeader
@@ -89,7 +89,7 @@ const Orders = ({ orders, status }) => {
           </CardContent>
         </Card>
       ))}
-    </>
+    </Stack>
   );
 };
 

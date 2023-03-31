@@ -43,7 +43,7 @@ const OrdersTabs = () => {
 
 
     return (
-        <Stack spacing={2} sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
+        <Stack sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
             <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 <Tabs aria-label="order tabs" centered value={selectedTab} onChange={handleChange}>
                     <Tab label={
