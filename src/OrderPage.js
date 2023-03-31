@@ -1,10 +1,10 @@
-import { ArrowBack, Edit, Save } from '@mui/icons-material';
+import { ArrowBack, Done, Edit, Save } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { editOrder } from './api_calls';
+import { editOrder, markOrderAsDone } from './api_calls';
 import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
 import OrderDetailsDialog from './OrderDetailsDialog';
@@ -115,6 +115,21 @@ function OrderPage() {
     setOrderChanged(true);
   };
 
+  const markOrderAsDoneMutation = useMutation(markOrderAsDone, {
+    onSuccess: () => {
+      showSuccessSnackbar("mark-order-as-done-success", "ההזמנה הסתיימה בהצלחה");
+      queryClient.invalidateQueries('orders');
+    },
+    onError: () => {
+      showErrorSnackbar("mark-order-as-done-error", "אירעה שגיאה בעת סיום ההזמנה");
+    }
+  });
+
+  const handleMarkAsDone = () => {
+    markOrderAsDoneMutation.mutate(order.did);
+    navigate(-1);
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 196px)' }}>
       <Card sx={{ minWidth: '400px', width: '60%' }}>
@@ -132,6 +147,7 @@ function OrderPage() {
             <Button variant="outlined" startIcon={<Save sx={{ ml: 1 }} />} onClick={handleSave} disabled={!orderChanged}>שמור</Button>
             <Button variant="outlined" startIcon={<Edit sx={{ ml: 1 }} />} onClick={handleEdit}>ערוך</Button>
             <ExportToPDFButton order_id={order.did} />
+            <Button variant="contained" startIcon={<Done sx={{ ml: 1 }} />} onClick={handleMarkAsDone}>סיים הזמנה</Button>
           </Stack>
         </CardActions>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '24px' }}>

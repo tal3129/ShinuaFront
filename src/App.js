@@ -9,6 +9,7 @@ import { Box } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "react-query";
 import OrderPage from "./OrderPage";
 import { SnackbarProvider } from "notistack";
+import OrdersTabs from "./OrdersTabs";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +27,7 @@ function App() {
                 <Route path="/catalog" element={<Catalog />} />
                 {<Route path="/pickups" element={<PickUps />} />}
                 {<Route path="/pickups/:id" element={<Pickup />} />}
-                <Route path="/orders" element={<Orders />} />
+                <Route path="/orders" element={<OrdersTabs />} />
                 <Route path="/orders/:id" element={<OrderPage />} />
               </Routes>
             </Box>
