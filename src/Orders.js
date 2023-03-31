@@ -73,7 +73,7 @@ const Orders = () => {
           <CardContent>
 
             <ExpandableProductGallery
-              products={order.ordered_products}
+              products={order.ordered_products.map((orderedProduct) => ( orderedProduct.product ))}
             />
             <Menu
               id="order-menu"

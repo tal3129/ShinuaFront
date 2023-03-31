@@ -34,18 +34,46 @@ function OrderPage() {
     setOrderChanged(true);
   };
 
-  const handleSave = () => {
-    const updatedOrder = {
+  /*
+  This is the format of the order to be sent for saving to the server:
+  {
+    "did": "string",
+    "name": "string",
+    "address": "string",
+    "description": "string",
+    "date": "2023-03-31T14:33:46.099Z",
+    "ordered_products": {
+      "additionalProp1": 0,
+      "additionalProp2": 0,
+      "additionalProp3": 0
+    },
+    "status": 0
+  }
+
+  This function will build the updated order object from the new details and the new ordered products.
+*/
+  const buildOrderForSaving = () => {
+    const productToAmountMap = {};
+    newOrderedProducts.forEach((product) => {
+      productToAmountMap[product.did] = product.amount;
+    });
+
+    return {
       did: order.did,
-      description: order.description,
-      date: order.date,
-      status: order.status,
+      name: orderDetails.name,
       address: orderDetails.address,
-      ordered_products: newOrderedProducts.map(({ did, name, description, image_url_list, status, amount, reserved, origin }) => ({ did, name, description, image_url_list, status, amount, reserved, origin })),
-      name: orderDetails.name
+      description: orderDetails.description,
+      date: orderDetails.date,
+      ordered_products: productToAmountMap,
+      status: orderDetails.status
     };
+  };
+
+  const handleSave = () => {
+    const updatedOrder = buildOrderForSaving();
     setOrderChanged(false);
     console.log("Saving order:");
+
     console.log(updatedOrder);
   };
 
@@ -76,11 +104,11 @@ function OrderPage() {
           <OrderDetails order={orderDetails} />
           <Stack sx={{ width: '100%' }}>
             <List sx={{ backgroundColor: 'background.paper', overflow: 'auto', maxHeight: '360px' }}>
-              {newOrderedProducts.map((product, index) => (
+              {newOrderedProducts.map((orderedProduct, index) => (
                 <OrderListItem
                   key={index}
-                  product={product}
-                  amount={product.amount}
+                  product={orderedProduct.product}
+                  amount={orderedProduct.amount}
                   onAmountChange={handleAmountChange(index)}
                   onDeleteProduct={() => { }}
                 />
