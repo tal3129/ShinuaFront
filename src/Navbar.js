@@ -6,6 +6,9 @@ const Navbar = () => {
   return (
     <AppBar position="static" >
       <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Typography variant="h6" component="div">
+          <Link to="/" style={{ textDecoration: "none", color: "white" }}>שינוע חברתי</Link>
+        </Typography>
         <div>
           <Button color="inherit" component={Link} to="/catalog">
             הקטלוג
@@ -17,9 +20,6 @@ const Navbar = () => {
             הזמנות
           </Button>
         </div>
-        <Typography variant="h6" component="div">
-          <Link to="/" style={{ textDecoration: "none", color: "white" }}>שינוע חברתי</Link>
-        </Typography>
       </Toolbar>
     </AppBar>
   );
