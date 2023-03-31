@@ -8,15 +8,15 @@ import styled from 'styled-components';
 import { deleteOrder, getOrders } from "./api_calls";
 import ExpandableProductGallery from './ExpandableProductGallery';
 import { useCustomSnackbar } from './snackbar_utils';
+import { useMemo } from 'react';
+import { ORDER_DONE, ORDER_IN_PROGRESS } from './constants';
 
-const Orders = () => {
-  const { data: orders, isFetching: isLoadingOrders } = useQuery({
-    queryKey: 'orders',
-    queryFn: getOrders,
-    placeholderData: [],
-  });
-
-  const openOrdersCount = orders ? orders.filter(order => !order.is_finished).length : 0;
+const Orders = ({ orders, status }) => {
+  const [openOrders, doneOrders] = useMemo(() => {
+    const openOrders = orders ? orders.filter(order => order.status === ORDER_IN_PROGRESS) : [];
+    const doneOrders = orders ? orders.filter(order => order.status === ORDER_DONE) : [];
+    return [openOrders, doneOrders];
+  }, [orders]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedOrder, setSelectedOrder] = React.useState(null);
@@ -49,17 +49,11 @@ const Orders = () => {
     handleMenuClose();
   };
 
+  const filteredOrders = orders.filter(order => order.status === status);
+
   return (
-    <Stack spacing={2} sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }} dir="rtl">
-      <Tabs aria-label="order tabs" centered value={0}>
-        <Tab label={
-          <Badge badgeContent={openOrdersCount} color="secondary" sx={{ pl: 1.5, pt: 0.5 }} anchorOrigin={{vertical: 'top', horizontal: 'left'}}>
-            הזמנות פתוחות
-          </Badge>
-        } />
-        <Tab label="הזמנות שהסתיימו" />
-      </Tabs>
-      {orders && orders.map((order) => (
+    <>
+      {filteredOrders && filteredOrders.map((order) => (
         <Card key={order.name} variant='outlined'>
           <CardHeader
             title={<StyledLink key={order.did} to={{ pathname: `/orders/${order.did}` }} state={{ order }}>
@@ -95,7 +89,7 @@ const Orders = () => {
           </CardContent>
         </Card>
       ))}
-    </Stack>
+    </>
   );
 };
 

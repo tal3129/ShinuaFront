@@ -90,3 +90,9 @@ export function deletePickup(pickupId) {
     did: pickupId,
   });
 }
+
+export function markOrderAsDone(oid) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/mark_order_as_done`, {
+    oid: oid,
+  });
+}
