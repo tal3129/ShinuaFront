@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 
 const API_HOST = "127.0.0.1";
@@ -73,5 +72,11 @@ export function editProduct(product) {
 export function deleteProduct(pid) {
   return axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
     pid: pid,
+  });
+}
+
+export function deleteOrder(oid) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/delete_order`, {
+    did: oid,
   });
 }

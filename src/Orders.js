@@ -2,10 +2,10 @@ import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem, Stack, Tab, 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { getOrders } from "./api_calls";
+import { deleteOrder, getOrders } from "./api_calls";
 import ExpandableProductGallery from './ExpandableProductGallery';
 
 const Orders = () => {
@@ -28,8 +28,16 @@ const Orders = () => {
     setAnchorEl(null);
   };
 
-  const handleDeleteOrder = () => {
-    //TODO: Implement delete order functionality
+  const queryClient = useQueryClient();
+  const deleteOrderMutation = useMutation(deleteOrder, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('orders');
+    },
+  });
+
+  const handleDeleteOrder = (order) => {
+    deleteOrderMutation.mutate(order.did);
+    handleMenuClose();
   };
 
   return (
@@ -66,7 +74,7 @@ const Orders = () => {
               open={Boolean(anchorEl) && selectedOrder === order}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleDeleteOrder}>
+              <MenuItem onClick={() => { handleDeleteOrder(order) }}>
                 <DeleteIcon sx={{ ml: 1 }} />
                 מחק הזמנה
               </MenuItem>
