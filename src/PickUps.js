@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getPickups } from "./api_calls";
 import ExpandableProductGallery from './ExpandableProductGallery';
+import { convertDateToHebrewString } from './Utils';
 
 const Pickups = () => {
   const { data: pickups, isFetching: isLoadingPickups } = useQuery({
@@ -46,12 +47,7 @@ const Pickups = () => {
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" gutterBottom>
                 {
-                  new Date(pickup.date).toLocaleDateString('he-IL', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })
+                  convertDateToHebrewString(pickup.date)
                 }
               </Typography>
             </StyledLink>}

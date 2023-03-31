@@ -15,7 +15,9 @@ function OrderPage() {
   const [orderDetails, setOrderDetails] = useState({
     name: order.name,
     date: order.date,
-    address: order.address
+    address: order.address,
+    description: order.description,
+    status: order.status
   });
   const [newOrderedProducts, setNewOrderedProducts] = useState(order.ordered_products);
   const [orderChanged, setOrderChanged] = useState(false);
@@ -45,7 +47,6 @@ function OrderPage() {
     setOrderChanged(false);
     console.log("Saving order:");
     console.log(updatedOrder);
-    // Save
   };
 
   const handleEdit = () => {

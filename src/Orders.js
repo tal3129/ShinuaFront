@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { deleteOrder, getOrders } from "./api_calls";
 import ExpandableProductGallery from './ExpandableProductGallery';
+import { useCustomSnackbar } from './snackbar_utils';
 
 const Orders = () => {
   const { data: orders, isFetching: isLoadingOrders } = useQuery({
@@ -28,12 +29,18 @@ const Orders = () => {
     setAnchorEl(null);
   };
 
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
   const queryClient = useQueryClient();
   const deleteOrderMutation = useMutation(deleteOrder, {
     onSuccess: () => {
+      showSuccessSnackbar('ההזמנה נמחקה בהצלחה');
       queryClient.invalidateQueries('orders');
     },
+    onError: () => {
+      showErrorSnackbar('אירעה שגיאה במחיקת ההזמנה');
+    }
   });
+
 
   const handleDeleteOrder = (order) => {
     deleteOrderMutation.mutate(order.did);
