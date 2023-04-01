@@ -54,7 +54,7 @@ const Orders = ({ orders, status }) => {
   return (
     <Stack spacing={2} sx={{ flexGrow: 1, p: 2, m: "0 auto", maxWidth: 1200 }}>
       {filteredOrders && filteredOrders.map((order) => (
-        <Card key={order.name} variant='outlined'>
+        <Card key={order.did} variant='outlined'>
           <CardHeader
             title={<StyledLink key={order.did} to={{ pathname: `/orders/${order.did}` }} state={{ order }}>
               <Typography variant="h5" gutterBottom>
