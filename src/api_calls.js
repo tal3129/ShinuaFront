@@ -11,7 +11,13 @@ export function getCatalog() {
 
 export function getOrders() {
   return axios
-    .get(`http://${API_HOST}:${API_PORT}/get_orders`)
+    .get(`http://${API_HOST}:${API_PORT}/orders`)
+    .then((response) => (response.data));
+}
+
+export function getOrder(oid) {
+  return axios
+    .get(`http://${API_HOST}:${API_PORT}/orders/${oid}`)
     .then((response) => (response.data));
 }
 
@@ -70,7 +76,7 @@ export function editProduct(product) {
 }
 
 export function editOrder(order) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/edit_order`, order);
+  return axios.put(`http://${API_HOST}:${API_PORT}/orders/${order.did}`, order);
 }
 
 export function deleteProduct(pid) {

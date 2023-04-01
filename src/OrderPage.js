@@ -1,10 +1,10 @@
 import { ArrowBack, Done, Edit, Save } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardHeader, IconButton, List, Stack, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { editOrder, markOrderAsDone } from './api_calls';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { editOrder, getOrder, markOrderAsDone } from './api_calls';
 import ExportToPDFButton from './ExportToPDFButton';
 import OrderDetails from './OrderDetails';
 import OrderDetailsDialog from './OrderDetailsDialog';
@@ -12,19 +12,51 @@ import OrderListItem from './OrderListItem';
 import { useCustomSnackbar } from './snackbar_utils';
 
 function OrderPage() {
+  // The order is passed from the Orders page or from the url ('/orders/:did')
+  // If passed from the orders page, it is passed as a state object.
+
   const navigate = useNavigate();
   const { state } = useLocation();
-  const order = state.order;
+  const { id: orderId } = useParams();
+
+  const { data: order, isLoading: isOrderLoading } = useQuery(
+    {
+      queryKey: ['orders', orderId],
+      queryFn: () => {
+        return getOrder(orderId);
+      },
+      onError: () => {
+        showErrorSnackbar('order-load-failed', 'אירעה שגיאה בטעינת ההזמנה');
+        navigate('/orders');
+      }
+    },
+    {
+      enabled: state ? !state.order : true,
+      placeholderData: state ? state.order : null,
+      refetchOnWindowFocus: false,
+      retry: false
+    }
+  );
+
+  // Update orderDetails and newOrderedProducts when the order is loaded from the server.
+  useEffect(() => {
+    if (order) {
+      setOrderDetails({
+        name: order.name,
+        date: order.date,
+        address: order.address,
+        date: order.date,
+        description: order.description,
+        status: order.status
+      });
+      setNewOrderedProducts(order.ordered_products);
+    }
+  }, [order]);
 
   const [orderDetails, setOrderDetails] = useState({
-    name: order.name,
-    date: order.date,
-    address: order.address,
-    date: order.date,
-    description: order.description,
-    status: order.status
+    ...order
   });
-  const [newOrderedProducts, setNewOrderedProducts] = useState(order.ordered_products);
+  const [newOrderedProducts, setNewOrderedProducts] = useState(order ? order.ordered_products : []);
   const [orderChanged, setOrderChanged] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
@@ -83,6 +115,7 @@ function OrderPage() {
       queryClient.invalidateQueries('orders');
     },
     onError: () => {
+      setOrderChanged(true);
       showErrorSnackbar("edit-order-error", "אירעה שגיאה בעת עדכון ההזמנה");
     }
   });
@@ -132,7 +165,7 @@ function OrderPage() {
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 196px)' }}>
-      <Card sx={{ minWidth: '400px', width: '60%' }}>
+      {order && <Card sx={{ minWidth: '400px', width: '60%' }}>
         <CardHeader
           title={<Typography variant="h4" sx={{ fontWeight: 'bold' }}>{orderDetails.name}</Typography>}
           sx={{ padding: '16px' }}
@@ -174,6 +207,7 @@ function OrderPage() {
           onSubmit={handleOrderDialogSave}
         />
       </Card>
+      }
     </Box >
   );
 }
