@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { MoreVert, Edit, Done, Delete } from "@mui/icons-material";
 import { useMutation, useQueryClient } from "react-query";
-import { moveProductToInventory } from "./api_calls";
+import { deleteProduct, moveProductToInventory } from "./api_calls";
 import { useCustomSnackbar } from "./snackbar_utils";
 import EditProductDialog from "./EditProductDialog";
 
@@ -30,6 +30,12 @@ const PickupProductCard = ({ product }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const queryClient = useQueryClient();
+  const deleteProductMutation = useMutation(deleteProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('catalog');
+    },
+  });
+
   const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
 
   const handleMenuClick = (event) => {
@@ -42,8 +48,8 @@ const PickupProductCard = ({ product }) => {
 
   const handleMenuDelete = () => {
     setAnchorEl(null);
-    console.log("Deleting product", product);
-  };
+    deleteProductMutation.mutate(product.did);
+  }
 
   const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
 
