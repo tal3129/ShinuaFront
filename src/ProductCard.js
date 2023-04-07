@@ -17,6 +17,7 @@ import EditProductDialog from "./EditProductDialog";
 import { deleteProduct } from "./api_calls";
 import { useMutation, useQueryClient } from "react-query";
 import { Stack } from "@mui/system";
+import GalleryModal from "./GalleryModal";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -30,6 +31,7 @@ const StyledCardContent = styled(CardContent)`
 const ProductCard = ({ product }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false); // <-- Add state for dialog open/closed
+  const [productGalleryOpen, setProductGalleryOpen] = React.useState(false);
 
   const queryClient = useQueryClient();
   const deleteProductMutation = useMutation(deleteProduct, {
@@ -91,9 +93,11 @@ const ProductCard = ({ product }) => {
       <CardActionArea>
         <CardMedia
           component="img"
+          loading="lazy"
           height="160"
           image={product.image_url_list ? product.image_url_list[0] : null}
           title={product.name}
+          onClick={() => setProductGalleryOpen(true)}
         />
         <Stack direction="column" spacing={1} sx={{ position: "absolute", top: "10px", right: "10px" }}>
           <Chip
@@ -107,6 +111,7 @@ const ProductCard = ({ product }) => {
         </Stack>
       </CardActionArea>
       <StyledCardContent>
+        <GalleryModal open={productGalleryOpen} setOpen={setProductGalleryOpen} images={product.image_url_list}/>
         <Typography gutterBottom variant="h5" component="h2">
           {product.name}
         </Typography>
