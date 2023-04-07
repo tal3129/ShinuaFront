@@ -1,10 +1,8 @@
 import { Share } from "@mui/icons-material";
-import { Alert, Backdrop, Button, CircularProgress, Snackbar } from "@mui/material";
+import { Backdrop, Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
-
-const fetch_pdf = (order_id) => {
-  return fetch("http://localhost:8000/orders/gQnhAxx0HTEowoaoeyg9/export_pdf"); // FIXME
-};
+import { getOrderPDF } from "./api_calls";
+import { useCustomSnackbar } from "./snackbar_utils";
 
 const download_blob = (blob, filename) => {
   // this is a bit of a hack
@@ -19,33 +17,24 @@ const download_blob = (blob, filename) => {
 
 const ExportToPDFButton = ({ order_id }) => {
   const [exporting, setExporting] = useState(false);
-  const [exportingErrorOpen, setExportingErrorOpen] = useState(false);
-
-  const handleClose = () => {
-    setExportingErrorOpen(false);
-  };
+  const { showSuccessSnackbar, showErrorSnackbar } = useCustomSnackbar();
 
   const handleExport = () => {
     setExporting(true);
-    fetch_pdf(order_id)
+    getOrderPDF(order_id)
       .then(response => response.blob())
       .then(blob => download_blob(blob, `order_${order_id}.pdf`))
       .catch(err => {
-        console.error(err);
-        setExportingErrorOpen(true);
+        showErrorSnackbar("export-pdf-error", "שגיאה בייצוא ל-PDF");
       })
       .finally(setExporting(false));
   };
 
+
   return (<>
-    <Button startIcon={<Share sx={{ml: 1}} />} onClick={handleExport}>ייצא ל-PDF</Button>
-    <Snackbar open={exportingErrorOpen} onClose={handleClose}>
-      <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-        Error while exporting
-      </Alert>
-    </Snackbar>
-    <Backdrop open={exporting} sx={{ color: '#fff'}}>
-      <CircularProgress color="inherit"/>
+    <Button startIcon={<Share sx={{ ml: 1 }} />} onClick={handleExport}>ייצא ל-PDF</Button>
+    <Backdrop open={exporting} sx={{ color: '#fff' }}>
+      <CircularProgress color="inherit" />
     </Backdrop>
   </>);
 };

@@ -1,32 +1,53 @@
 import axios from "axios";
+import { STORAGE } from "./constants";
 
 const API_HOST = "127.0.0.1";
 const API_PORT = "8000";
 
+export const getOrderPDF = (order_id) => {
+  return fetch(`http://${API_HOST}:${API_PORT}/orders/${order_id}/export_pdf`);
+};
+
 export function getCatalog() {
   return axios
-    .get(`http://${API_HOST}:${API_PORT}/get_catalog`)
+    .get(`http://${API_HOST}:${API_PORT}/products`, {
+      params: {
+        status: STORAGE,
+      },
+    })
     .then((response) => (response.data.Products));
 }
 
 export function getOrders() {
   return axios
-    .get(`http://${API_HOST}:${API_PORT}/get_orders`)
+    .get(`http://${API_HOST}:${API_PORT}/orders`)
+    .then((response) => (response.data));
+}
+
+export function getOrder(oid) {
+  return axios
+    .get(`http://${API_HOST}:${API_PORT}/orders/${oid}`)
     .then((response) => (response.data));
 }
 
 export function getPickups() {
   return axios
-    .get(`http://${API_HOST}:${API_PORT}/get_pickups`)
+    .get(`http://${API_HOST}:${API_PORT}/pickups`)
     .then((response) => (response.data))
     .catch((error) => {
       console.error(error);
     });
 }
 
+export function getPickup(pid) {
+  return axios
+    .get(`http://${API_HOST}:${API_PORT}/pickups/${pid}`)
+    .then((response) => (response.data));
+}
+
 export function createOrder(order) {
   return axios
-    .post(`http://${API_HOST}:${API_PORT}/add_order`, {
+    .post(`http://${API_HOST}:${API_PORT}/orders`, {
       did: "", // We don't know the id yet
       name: order.name,
       address: order.address,
@@ -55,40 +76,29 @@ export function moveProductToInventory({ pid }) {
     });
 }
 
-// TODO: create this in backend
-export function movePickupToInventory({ pickupId }) {
-  return axios
-    .post(`http://${API_HOST}:${API_PORT}/move_pickup_to_inventory`, {
-      pickup_id: pickupId,
-    });
+export function movePickupToInventory(pickupId) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/pickups/${pickupId}/move_to_inventory`);
 }
-
 
 // Function to edit product using API
 export function editProduct(product) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/edit_product`, product);
+  return axios.post(`http://${API_HOST}:${API_PORT}/products/${product.did}`, product);
 }
 
 export function editOrder(order) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/edit_order`, order);
+  return axios.put(`http://${API_HOST}:${API_PORT}/orders/${order.did}`, order);
 }
 
 export function deleteProduct(pid) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/delete_product`, {
-    pid: pid,
-  });
+  return axios.delete(`http://${API_HOST}:${API_PORT}/products/${pid}`);
 }
 
 export function deleteOrder(oid) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/delete_order`, {
-    did: oid,
-  });
+  return axios.delete(`http://${API_HOST}:${API_PORT}/orders/${oid}`);
 }
 
 export function deletePickup(pickupId) {
-  return axios.post(`http://${API_HOST}:${API_PORT}/delete_pickup`, {
-    did: pickupId,
-  });
+  return axios.delete(`http://${API_HOST}:${API_PORT}/pickups/${pickupId}`);
 }
 
 export function markOrderAsDone(oid) {
