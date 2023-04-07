@@ -1,11 +1,16 @@
 import axios from "axios";
+import { STORAGE } from "./constants";
 
 const API_HOST = "127.0.0.1";
 const API_PORT = "8000";
 
 export function getCatalog() {
   return axios
-    .get(`http://${API_HOST}:${API_PORT}/get_catalog`)
+    .get(`http://${API_HOST}:${API_PORT}/products`, {
+      params: {
+        status: STORAGE,
+      },
+    })
     .then((response) => (response.data.Products));
 }
 
@@ -67,14 +72,9 @@ export function moveProductToInventory({ pid }) {
     });
 }
 
-// TODO: create this in backend
-export function movePickupToInventory({ pickupId }) {
-  return axios
-    .post(`http://${API_HOST}:${API_PORT}/move_pickup_to_inventory`, {
-      pickup_id: pickupId,
-    });
+export function movePickupToInventory(pickupId) {
+  return axios.post(`http://${API_HOST}:${API_PORT}/pickups/${pickupId}/move_to_inventory`);
 }
-
 
 // Function to edit product using API
 export function editProduct(product) {
