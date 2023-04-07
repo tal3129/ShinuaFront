@@ -76,7 +76,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <StyledCard>
+    <StyledCard sx={{height: '100%'}}>
       <AddToOrderDialog
         open={openAddToOrder}
         onClose={handleClose}
