@@ -4,6 +4,10 @@ import { STORAGE } from "./constants";
 const API_HOST = "127.0.0.1";
 const API_PORT = "8000";
 
+export const getOrderPDF = (order_id) => {
+  return fetch(`http://${API_HOST}:${API_PORT}/orders/${order_id}/export_pdf`);
+};
+
 export function getCatalog() {
   return axios
     .get(`http://${API_HOST}:${API_PORT}/products`, {
