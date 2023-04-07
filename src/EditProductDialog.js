@@ -14,6 +14,7 @@ const EditProductDialog = ({ open, onClose, initialProduct }) => {
         onSuccess: () => {
             showSuccessSnackbar("edit-product-success", "המוצר עודכן בהצלחה");
             queryClient.invalidateQueries('catalog');
+            queryClient.invalidateQueries('pickups');
         },
         onError: () => {
             console.log('error');

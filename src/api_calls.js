@@ -30,6 +30,12 @@ export function getPickups() {
     });
 }
 
+export function getPickup(pid) {
+  return axios
+    .get(`http://${API_HOST}:${API_PORT}/pickups/${pid}`)
+    .then((response) => (response.data));
+}
+
 export function createOrder(order) {
   return axios
     .post(`http://${API_HOST}:${API_PORT}/orders`, {
